@@ -1,48 +1,40 @@
-# Design Brief – Momo Customer Review & Rewards
+# Design Brief – Momo Customer Review & Rewards (Retro Edition)
 
 ## Design Read
-A premium, delightful, and highly engaging mobile-first feedback experience for a high-end momo restaurant. It uses warm, cozy colors and playful illustrations to make the review process feel like a game and rewards customers for their time.
+A premium, retro-inspired Japanese street-food style customer review and rewards web app for a high-end dumpling and momo restaurant. It evokes a playful, authentic, and handcrafted visual character using hand-drawn watercolor art, vintage cream paper textures, and tactile feedback.
 
 ## Concept Spine
-"The Magic Steamer Basket" – The experience is structured like opening a traditional bamboo steamer: starting with the rising steam (welcome), opening the lid to add ingredients (review), finding a glowing surprise (unlock), scraping away the leaf wrap (scratch), and enjoying the steaming momo reward (revealed).
+"The Street Dumpling Cart" – The design mimics a vintage wooden street food stall where everything is handcrafted, authentic, and steamed fresh. From the ink-and-watercolor main steam pot (welcome) to the review slate, the paper card, and the scratch ticket wrap, the user is immersed in a warm, physical dining experience.
 
 ## Delivery Tier
-`cinema` – We will use smooth CSS transitions, custom GSAP scroll/pointer animations, an interactive HTML5 `<canvas>` scratch card with realistic brush strokes, and physics-based confetti particles for reward celebration.
+`cinema` – We will use:
+- A textured vintage paper background (`/assets/paper_texture.png`).
+- Hand-drawn ink + watercolor spot illustrations (`/assets/noodle_spot.png`, `/assets/dumpling_spot.png`) positioned floating dynamically using CSS multiply blending for clean transparency.
+- A **Web Audio API** procedural sound synthesizer:
+  - Dynamic scraping friction noise synced with pointer coordinates during scratching.
+  - A delightful pentatonic major scale arpeggio chime when the coupon is revealed.
+- Soft animated steam keyframes rising from the steamer graphics.
 
 ## Locked Palette
-- **Primary Background:** Warm Light Cream (`#FFFDFB`)
-- **Accent Backgrounds:** Warm Peach (`#FFF4E6`), Soft Rose-Orange (`#FFEBE3`)
-- **Brand Red:** Spicy Vermilion (`#E53E3E`)
-- **Brand Orange:** Sweet Apricot (`#ED8936`)
-- **Brand Gold:** Honey Yellow (`#ECC94B`)
-- **Text Color:** Rich Espresso (`#2C1E1A`)
-- **Gradients:** Soft warmth radial gradients mimicking rising steam (`linear-gradient(135deg, #FF7E5F, #FEB47B)`).
+- **Primary Background:** Warm Vintage Cream (`#FFF7ED` or custom paper texture pattern)
+- **Primary Red:** Vibrant Tomato Red (`#E5422B`)
+- **Accent Orange:** Warm Apricot (`#F09456`)
+- **Accent Beige:** Soft Sand (`#F5EAD4`)
+- **Dark Text:** Charcoal-Brown (`#362521`)
+- **Paper Border:** Soft Brown Line (`rgba(54, 37, 33, 0.12)`)
 
 ## Locked Type
-- **Headings & Display:** `Outfit` (warm, geometric, friendly sans-serif)
-- **Body & Captions:** `Inter` (readable, neutral sans-serif)
-- **Codes & Tech:** `JetBrains Mono` (for the coupon codes)
+- **Headings & Bold Text:** `Outfit` (for playful premium structure)
+- **Body Text:** `Inter` (for readability)
+- **Monospace details:** `JetBrains Mono` (for coupons)
 
 ## Tier-1 Technique
-**C3 / B2: Canvas Scratch Card & Dynamic Particle Burst**
-An interactive `<canvas>` overlay that behaves like a physical metallic silver scratch card. The user swipes their finger/mouse to erase the silver metallic texture, revealing the reward below in real time. Once 70% of the surface is scratched, it triggers a confetti burst and opens the final screen.
+**C3 / B2: Interactive Scratch Canvas with Pointer Friction Audio & Reveal Chimes**
+The scratch card uses an HTML5 canvas overlay loaded with a silver scratch texture. When the pointer scratches, a high-pass filtered white noise generator synthesizes scratching friction audio in real time. Upon reaching >60% clearance, a major pentatonic synth chime triggers, and the canvas fades out to reveal the reward.
 
 ## Section Plan (UI States)
-1. **Screen 1: Welcome (`state-welcome`)** – Full-screen hero, steaming momo vector, large rating CTA.
-2. **Screen 2: Review Form (`state-review`)** – Glassmorphism card containing 5-star selector, optional Email Address input, and submit button.
-3. **Screen 3: Reward Unlock (`state-unlock`)** – Animated celebration with a pulsing golden gift box.
-4. **Screen 4: Scratch Card (`state-scratch`)** – Interactive scratch canvas overlay.
-5. **Screen 5: Reward Revealed (`state-revealed`)** – Burst card displaying prize, unique code, QR code, and expiry timer.
-
-## Asset Plan
-- **Primary Steaming Momo Illustration:** `momo_steamer.png` (cute, stylized steaming momos in a bamboo basket, warm palette).
-- **Glowing Gift Box:** `glowing_gift_box.png` (gold and vermilion glowing present box).
-- **Silver Metallic Texture:** `silver_texture.png` (silver glitter pattern, generated for canvas scratch card overlay).
-- **Favicon & Monogram:** `momo_logo.png` (minimal cute momo icon).
-- **OG Card:** `social_og.png` (1200x630 branded social card).
-
-## CTA Inventory
-- `Start Review` – Pulsing primary pill with warm gradient and active tap scale.
-- `Submit & Unlock Reward` – Soft red container button with micro-bounce.
-- `Scratch Now` – Glowing gold button with a shimmer gradient overlay.
-- `Show to Cashier` – Interactive action that displays the verification modal.
+1. **Screen 1: Welcome (`state-welcome`)** – Retro ink-and-watercolor steamer illustration, tomato red CTAs, floating noodles and dumplings decoration.
+2. **Screen 2: Review Form (`state-review`)** – Warm card overlay, interactive star selectors, optional email address input.
+3. **Screen 3: Reward Unlock (`state-unlock`)** – Celebration with custom colored confetti and golden gift box.
+4. **Screen 4: Scratch Card (`state-scratch`)** – Silver ticket, real-time scratching noise synthesizer.
+5. **Screen 5: Reward Revealed (`state-revealed`)** – Celebration arpeggio, coupon code copy, QR, and Cashier redeem dialog.

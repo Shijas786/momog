@@ -7,7 +7,113 @@ export const Route = createFileRoute("/")({
   component: CustomerExperienceApp,
 });
 
-// A lightweight, responsive SVG Star Icon for the interactive 5-star rating
+// SSR-Safe Procedural Synthesizer for Scratch Card Audio Feedback
+class AudioSynthEngine {
+  private ctx: AudioContext | null = null;
+  private noiseSource: AudioBufferSourceNode | null = null;
+  private noiseGain: GainNode | null = null;
+  private noiseFilter: BiquadFilterNode | null = null;
+
+  init() {
+    if (this.ctx) return;
+    
+    // Guard browser-only globals for SSR safety
+    if (typeof window === "undefined") return;
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) return;
+
+    try {
+      this.ctx = new AudioContextClass();
+      
+      // Generate 2 seconds of white noise buffer
+      const sampleRate = this.ctx.sampleRate;
+      const bufferSize = sampleRate * 2;
+      const buffer = this.ctx.createBuffer(1, bufferSize, sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+
+      this.noiseSource = this.ctx.createBufferSource();
+      this.noiseSource.buffer = buffer;
+      this.noiseSource.loop = true;
+
+      // Bandpass filter to isolate scratch squeak frequencies
+      this.noiseFilter = this.ctx.createBiquadFilter();
+      this.noiseFilter.type = "bandpass";
+      this.noiseFilter.frequency.value = 900;
+      this.noiseFilter.Q.value = 3.5;
+
+      this.noiseGain = this.ctx.createGain();
+      this.noiseGain.gain.value = 0; // Start completely silent
+
+      this.noiseSource.connect(this.noiseFilter);
+      this.noiseFilter.connect(this.noiseGain);
+      this.noiseGain.connect(this.ctx.destination);
+
+      this.noiseSource.start(0);
+    } catch (e) {
+      console.warn("Failed to initialize Web Audio API Context:", e);
+    }
+  }
+
+  resume() {
+    if (this.ctx && this.ctx.state === "suspended") {
+      this.ctx.resume();
+    }
+  }
+
+  setIntensity(speed: number) {
+    this.init();
+    this.resume();
+    if (!this.ctx || !this.noiseGain || !this.noiseFilter) return;
+
+    const now = this.ctx.currentTime;
+    // Map stroke speed directly to gain and center frequency
+    const targetGain = Math.min(0.2, speed * 0.008);
+    const targetFreq = Math.min(1600, 700 + speed * 8);
+
+    this.noiseGain.gain.setTargetAtTime(targetGain, now, 0.03);
+    this.noiseFilter.frequency.setTargetAtTime(targetFreq, now, 0.03);
+  }
+
+  stop() {
+    if (this.ctx && this.noiseGain) {
+      this.noiseGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.04);
+    }
+  }
+
+  playChime() {
+    this.init();
+    this.resume();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    // C-major Pentatonic Scale arpeggio for magical win effect (C4, D4, E4, G4, A4, C5)
+    const frequencies = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
+
+    frequencies.forEach((freq, index) => {
+      const osc = this.ctx!.createOscillator();
+      const gainNode = this.ctx!.createGain();
+
+      osc.type = "sine";
+      osc.frequency.value = freq;
+
+      // Bell envelope: fast attack, exponential decay decay decay
+      gainNode.gain.setValueAtTime(0, now + index * 0.08);
+      gainNode.gain.linearRampToValueAtTime(0.12, now + index * 0.08 + 0.02);
+      gainNode.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.08 + 0.45);
+
+      osc.connect(gainNode);
+      gainNode.connect(this.ctx!.destination);
+
+      osc.start(now + index * 0.08);
+      osc.stop(now + index * 0.08 + 0.48);
+    });
+  }
+}
+
+// Custom star SVG icons
 function StarIcon({ filled, onClick }: { filled: boolean; onClick: () => void }) {
   return (
     <button type="button" className="star-btn" onClick={onClick}>
@@ -22,20 +128,21 @@ function StarIcon({ filled, onClick }: { filled: boolean; onClick: () => void })
   );
 }
 
-// Lightweight CSS Confetti particle system
+// Visual Confetti Effect
 function ConfettiEffect() {
   const [particles, setParticles] = useState<any[]>([]);
 
   useEffect(() => {
-    const colors = ["#E53E3E", "#ED8936", "#ECC94B", "#FFFBF7", "#FEB47B"];
+    // Tomato red, Warm orange, Honey gold colors
+    const colors = ["#E5422B", "#F09456", "#ECC94B", "#362521", "#FFF9F2"];
     const items = Array.from({ length: 50 }).map((_, i) => ({
       id: i,
-      x: Math.random() * 100, // percentage horizontal placement
-      y: -10 - Math.random() * 20, // initial top placement
+      x: Math.random() * 100,
+      y: -10 - Math.random() * 20,
       size: 5 + Math.random() * 8,
       color: colors[Math.floor(Math.random() * colors.length)],
       delay: Math.random() * 2,
-      duration: 2.5 + Math.random() * 2,
+      duration: 2.2 + Math.random() * 2,
       rotation: Math.random() * 360,
     }));
     setParticles(items);
@@ -51,37 +158,33 @@ function ConfettiEffect() {
             left: `${p.x}%`,
             top: `${p.y}px`,
             width: `${p.size}px`,
-            height: `${p.size * 1.6}px`,
+            height: `${p.size * 1.5}px`,
             backgroundColor: p.color,
-            borderRadius: "3px",
+            borderRadius: "2px",
             transform: `rotate(${p.rotation}deg)`,
-            opacity: 0.9,
+            opacity: 0.95,
             animation: `confettiFall ${p.duration}s linear ${p.delay}s infinite`,
           }}
         />
       ))}
       <style>{`
         @keyframes confettiFall {
-          0% {
-            transform: translateY(0) rotate(0deg);
-          }
-          100% {
-            transform: translateY(105vh) rotate(720deg);
-          }
+          0% { transform: translateY(0) rotate(0deg); }
+          100% { transform: translateY(105vh) rotate(540deg); }
         }
       `}</style>
     </div>
   );
 }
 
-// Sparkle element wrapper for rewards card
+// Sparkle graphic overlays
 function SparkleLayer() {
   return (
     <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
-      <div className="sparkle" style={{ top: "15%", left: "10%", animationDelay: "0.2s" }} />
-      <div className="sparkle" style={{ top: "25%", right: "12%", animationDelay: "0.8s" }} />
-      <div className="sparkle" style={{ bottom: "20%", left: "18%", animationDelay: "1.1s" }} />
-      <div className="sparkle" style={{ bottom: "35%", right: "8%", animationDelay: "0.5s" }} />
+      <div className="sparkle" style={{ top: "12%", left: "8%", animationDelay: "0.1s" }} />
+      <div className="sparkle" style={{ top: "22%", right: "10%", animationDelay: "0.6s" }} />
+      <div className="sparkle" style={{ bottom: "18%", left: "15%", animationDelay: "0.9s" }} />
+      <div className="sparkle" style={{ bottom: "30%", right: "7%", animationDelay: "0.4s" }} />
       <style>{`
         .sparkle {
           position: absolute;
@@ -89,26 +192,28 @@ function SparkleLayer() {
           height: 8px;
           background-color: var(--brand-gold);
           clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-          animation: sparkleAnim 1.8s ease-in-out infinite;
+          animation: sparkleAnim 1.6s ease-in-out infinite;
         }
         @keyframes sparkleAnim {
-          0%, 100% { transform: scale(0.4); opacity: 0.3; }
-          50% { transform: scale(1.2); opacity: 1; filter: drop-shadow(0 0 4px var(--brand-gold)); }
+          0%, 100% { transform: scale(0.3); opacity: 0.2; }
+          50% { transform: scale(1.1); opacity: 0.95; filter: drop-shadow(0 0 3px var(--brand-gold)); }
         }
       `}</style>
     </div>
   );
 }
 
-// ScratchCard Interactive HTML5 Canvas component
+// Interactive ScratchCard using custom audio synthesis intensity trigger
 interface ScratchCardProps {
   rewardText: string;
   onReveal: () => void;
+  audioSynth: AudioSynthEngine;
 }
 
-function ScratchCard({ rewardText, onReveal }: ScratchCardProps) {
+function ScratchCard({ rewardText, onReveal, audioSynth }: ScratchCardProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isFullyRevealed, setIsFullyRevealed] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const prevPosRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -116,7 +221,7 @@ function ScratchCard({ rewardText, onReveal }: ScratchCardProps) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const setupCanvas = () => {
+    const initCanvas = () => {
       const rect = canvas.getBoundingClientRect();
       canvas.width = rect.width;
       canvas.height = rect.height;
@@ -128,57 +233,80 @@ function ScratchCard({ rewardText, onReveal }: ScratchCardProps) {
       img.src = "/assets/silver_texture.png";
       img.onload = () => {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        drawTextLabel();
+        drawCoverText();
       };
       img.onerror = () => {
-        // Safe fallback in case image isn't loaded/ready
-        ctx.fillStyle = "#B0B5BC";
+        // Fallback card fill
+        ctx.fillStyle = "#C0C4CC";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        drawTextLabel();
+        drawCoverText();
       };
     };
 
-    const drawTextLabel = () => {
-      ctx.fillStyle = "rgba(44, 30, 26, 0.85)";
+    const drawCoverText = () => {
+      ctx.fillStyle = "#362521";
       ctx.font = 'bold 22px "Outfit", sans-serif';
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("Scratch Here 🥟", canvas.width / 2, canvas.height / 2);
+      ctx.fillText("Scratch Ticket 🥟", canvas.width / 2, canvas.height / 2);
     };
 
-    setupCanvas();
-
-    // Trigger canvas resizing safely on window updates
-    window.addEventListener("resize", setupCanvas);
+    initCanvas();
+    window.addEventListener("resize", initCanvas);
 
     let drawing = false;
 
     const startDraw = (e: any) => {
       drawing = true;
+      audioSynth.init();
+      audioSynth.resume();
+      
+      const rect = canvas.getBoundingClientRect();
+      let cx = 0, cy = 0;
+      if (e.touches && e.touches[0]) {
+        cx = e.touches[0].clientX;
+        cy = e.touches[0].clientY;
+      } else {
+        cx = e.clientX;
+        cy = e.clientY;
+      }
+      prevPosRef.current = { x: cx - rect.left, y: cy - rect.top };
+      
       scratch(e);
     };
 
     const stopDraw = () => {
       drawing = false;
-      calcTransparentPercentage();
+      audioSynth.stop();
+      checkFulfillment();
     };
 
     const scratch = (e: any) => {
-      if (!drawing || isFullyRevealed) return;
+      if (!drawing || isRevealed) return;
       const rect = canvas.getBoundingClientRect();
-      let clientX = 0;
-      let clientY = 0;
+      let cx = 0, cy = 0;
 
       if (e.touches && e.touches[0]) {
-        clientX = e.touches[0].clientX;
-        clientY = e.touches[0].clientY;
+        cx = e.touches[0].clientX;
+        cy = e.touches[0].clientY;
       } else {
-        clientX = e.clientX;
-        clientY = e.clientY;
+        cx = e.clientX;
+        cy = e.clientY;
       }
 
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
+      const x = cx - rect.left;
+      const y = cy - rect.top;
+
+      // Calculate swipe speed
+      const dx = x - prevPosRef.current.x;
+      const dy = y - prevPosRef.current.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      prevPosRef.current = { x, y };
+
+      // Set audio scratch intensity in synthesis engine
+      if (distance > 0.5) {
+        audioSynth.setIntensity(distance);
+      }
 
       ctx.globalCompositeOperation = "destination-out";
       ctx.beginPath();
@@ -186,28 +314,25 @@ function ScratchCard({ rewardText, onReveal }: ScratchCardProps) {
       ctx.fill();
     };
 
-    const calcTransparentPercentage = () => {
+    const checkFulfillment = () => {
       const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const pixels = imgData.data;
-      let clearCount = 0;
+      let emptyCount = 0;
 
       for (let i = 3; i < pixels.length; i += 4) {
-        if (pixels[i] === 0) {
-          clearCount++;
-        }
+        if (pixels[i] === 0) emptyCount++;
       }
 
-      const total = pixels.length / 4;
-      const percentage = (clearCount / total) * 100;
-
-      // Auto-reveal the coupon code once user has scratched >60% of the silver card surface
-      if (percentage > 58 && !isFullyRevealed) {
-        setIsFullyRevealed(true);
+      const ratio = emptyCount / (pixels.length / 4);
+      if (ratio > 0.55 && !isRevealed) {
+        setIsRevealed(true);
+        audioSynth.stop();
+        audioSynth.playChime(); // Play pentatonic scale reveal sound
         canvas.style.opacity = "0";
-        canvas.style.transition = "opacity 0.5s ease-out";
+        canvas.style.transition = "opacity 0.4s ease-out";
         setTimeout(() => {
           onReveal();
-        }, 550);
+        }, 500);
       }
     };
 
@@ -221,7 +346,7 @@ function ScratchCard({ rewardText, onReveal }: ScratchCardProps) {
     canvas.addEventListener("touchend", stopDraw);
 
     return () => {
-      window.removeEventListener("resize", setupCanvas);
+      window.removeEventListener("resize", initCanvas);
       canvas.removeEventListener("mousedown", startDraw);
       canvas.removeEventListener("mousemove", scratch);
       canvas.removeEventListener("mouseup", stopDraw);
@@ -230,15 +355,14 @@ function ScratchCard({ rewardText, onReveal }: ScratchCardProps) {
       canvas.removeEventListener("touchmove", scratch);
       canvas.removeEventListener("touchend", stopDraw);
     };
-  }, [isFullyRevealed, onReveal]);
+  }, [isRevealed, onReveal, audioSynth]);
 
   return (
     <div style={{ width: "100%", height: "100%", position: "relative" }}>
-      {/* Revealed content is sitting underneath the canvas */}
       <div className="scratch-reveal-content">
         <SparkleLayer />
-        <h4 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.25rem", color: "var(--brand-orange)", marginBottom: "0.25rem" }}>YOUR REWARD</h4>
-        <div style={{ fontSize: "2rem", fontWeight: 800, textAlign: "center", color: "var(--brand-red)", animation: "floatMomo 3.5s ease-in-out infinite" }}>
+        <h4 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.15rem", color: "var(--brand-orange)", marginBottom: "0.25rem" }}>LUCKY REWARD</h4>
+        <div style={{ fontSize: "2rem", fontWeight: 900, textAlign: "center", color: "var(--brand-red)", animation: "floatMomo 4s ease-in-out infinite" }}>
           {rewardText}
         </div>
       </div>
@@ -247,52 +371,50 @@ function ScratchCard({ rewardText, onReveal }: ScratchCardProps) {
   );
 }
 
-// Vector SVG QR Code Mockup Generator
+// Vector QR Code representation
 function QRCodeIcon({ value }: { value: string }) {
   return (
-    <svg width="120" height="120" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ border: "4px solid white", borderRadius: "12px", boxShadow: "var(--shadow-sm)" }}>
+    <svg width="110" height="110" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ border: "4px solid white", borderRadius: "10px", boxShadow: "var(--shadow-sm)" }}>
       <rect width="100" height="100" fill="white" />
-      {/* Top Left Corner Anchor */}
-      <rect x="10" y="10" width="25" height="25" fill="var(--text-primary)" />
-      <rect x="14" y="14" width="17" height="17" fill="white" />
-      <rect x="18" y="18" width="9" height="9" fill="var(--text-primary)" />
-
-      {/* Top Right Corner Anchor */}
-      <rect x="65" y="10" width="25" height="25" fill="var(--text-primary)" />
-      <rect x="69" y="14" width="17" height="17" fill="white" />
-      <rect x="73" y="18" width="9" height="9" fill="var(--text-primary)" />
-
-      {/* Bottom Left Corner Anchor */}
-      <rect x="10" y="65" width="25" height="25" fill="var(--text-primary)" />
-      <rect x="14" y="69" width="17" height="17" fill="white" />
-      <rect x="18" y="73" width="9" height="9" fill="var(--text-primary)" />
-
-      {/* Small anchor bottom-right */}
-      <rect x="73" y="73" width="9" height="9" fill="var(--text-primary)" />
-
-      {/* Simulated QR Code Blocks */}
-      <rect x="42" y="10" width="5" height="10" fill="var(--text-primary)" />
-      <rect x="50" y="15" width="8" height="5" fill="var(--text-primary)" />
-      <rect x="45" y="25" width="12" height="6" fill="var(--text-primary)" />
       
-      <rect x="10" y="42" width="10" height="5" fill="var(--text-primary)" />
-      <rect x="15" y="50" width="5" height="8" fill="var(--text-primary)" />
-      <rect x="25" y="45" width="6" height="12" fill="var(--text-primary)" />
+      {/* Anchor squares */}
+      <rect x="8" y="8" width="22" height="22" fill="var(--text-primary)" />
+      <rect x="12" y="12" width="14" height="14" fill="white" />
+      <rect x="15" y="15" width="8" height="8" fill="var(--text-primary)" />
 
-      <rect x="40" y="40" width="8" height="8" fill="var(--text-primary)" />
-      <rect x="52" y="44" width="10" height="6" fill="var(--text-primary)" />
-      <rect x="48" y="55" width="12" height="5" fill="var(--text-primary)" />
+      <rect x="70" y="8" width="22" height="22" fill="var(--text-primary)" />
+      <rect x="74" y="12" width="14" height="14" fill="white" />
+      <rect x="77" y="15" width="8" height="8" fill="var(--text-primary)" />
 
-      <rect x="65" y="40" width="6" height="12" fill="var(--text-primary)" />
-      <rect x="75" y="48" width="12" height="4" fill="var(--text-primary)" />
-      <rect x="70" y="56" width="5" height="8" fill="var(--text-primary)" />
+      <rect x="8" y="70" width="22" height="22" fill="var(--text-primary)" />
+      <rect x="12" y="74" width="14" height="14" fill="white" />
+      <rect x="15" y="77" width="8" height="8" fill="var(--text-primary)" />
 
-      <rect x="42" y="65" width="8" height="6" fill="var(--text-primary)" />
-      <rect x="54" y="70" width="12" height="8" fill="var(--text-primary)" />
-      <rect x="48" y="82" width="6" height="6" fill="var(--text-primary)" />
+      <rect x="77" y="77" width="8" height="8" fill="var(--text-primary)" />
+
+      {/* QR matrix blocks */}
+      <rect x="36" y="8" width="6" height="12" fill="var(--text-primary)" />
+      <rect x="46" y="14" width="8" height="6" fill="var(--text-primary)" />
+      <rect x="40" y="24" width="12" height="6" fill="var(--text-primary)" />
       
-      <rect x="70" y="65" width="15" height="5" fill="var(--text-primary)" />
-      <rect x="65" y="80" width="6" height="10" fill="var(--text-primary)" />
+      <rect x="8" y="36" width="12" height="6" fill="var(--text-primary)" />
+      <rect x="14" y="46" width="6" height="8" fill="var(--text-primary)" />
+      <rect x="24" y="40" width="6" height="12" fill="var(--text-primary)" />
+
+      <rect x="36" y="36" width="8" height="8" fill="var(--text-primary)" />
+      <rect x="48" y="42" width="10" height="6" fill="var(--text-primary)" />
+      <rect x="44" y="52" width="12" height="6" fill="var(--text-primary)" />
+
+      <rect x="62" y="36" width="6" height="12" fill="var(--text-primary)" />
+      <rect x="74" y="44" width="12" height="4" fill="var(--text-primary)" />
+      <rect x="68" y="52" width="6" height="8" fill="var(--text-primary)" />
+
+      <rect x="38" y="70" width="8" height="6" fill="var(--text-primary)" />
+      <rect x="50" y="76" width="12" height="8" fill="var(--text-primary)" />
+      <rect x="44" y="86" width="6" height="6" fill="var(--text-primary)" />
+      
+      <rect x="68" y="70" width="12" height="6" fill="var(--text-primary)" />
+      <rect x="62" y="82" width="6" height="10" fill="var(--text-primary)" />
     </svg>
   );
 }
@@ -300,27 +422,39 @@ function QRCodeIcon({ value }: { value: string }) {
 function CustomerExperienceApp() {
   const [screen, setScreen] = useState<"welcome" | "review" | "unlock" | "scratch" | "revealed">("welcome");
   
-  // Review inputs state
+  // Review form states
   const [rating, setRating] = useState<number>(0);
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [email, setEmail] = useState<string>("");
   const [feedback, setFeedback] = useState<string>("");
   
-  // Submit details received from backend server
+  // Reward details
   const [rewardText, setRewardText] = useState<string>("");
   const [couponCode, setCouponCode] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [formError, setFormError] = useState<string>("");
 
-  // Claim process state
+  // Claim overlay details
   const [isClaimModalOpen, setIsClaimModalOpen] = useState<boolean>(false);
   const [isClaimed, setIsClaimed] = useState<boolean>(false);
   const [isClaiming, setIsClaiming] = useState<boolean>(false);
   const [copyFeedback, setCopyFeedback] = useState<string>("");
 
+  // SSR-Safe Web Audio Synthesizer reference
+  const audioSynthRef = useRef<AudioSynthEngine | null>(null);
+
+  useEffect(() => {
+    // Instantiate Audio Engine only in browser environment
+    audioSynthRef.current = new AudioSynthEngine();
+  }, []);
+
   const ratingTexts = ["", "Terrible 😟", "Okay 😐", "Good 😊", "Delicious! 😋", "Heavenly! 🥟"];
 
   const handleStartReview = () => {
+    if (audioSynthRef.current) {
+      audioSynthRef.current.init();
+      audioSynthRef.current.resume();
+    }
     setScreen("review");
   };
 
@@ -361,7 +495,7 @@ function CustomerExperienceApp() {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(couponCode);
       setCopyFeedback("Copied!");
-      setTimeout(() => setCopyFeedback(""), 2000);
+      setTimeout(() => setCopyFeedback(""), 1800);
     }
   };
 
@@ -382,29 +516,40 @@ function CustomerExperienceApp() {
 
   return (
     <div className="app-container">
-      {/* Animated steam background details */}
+      {/* Background steam gradient shift */}
       <div className="steam-overlay" />
+
+      {/* Floating Retro Japanese food spot illustrations */}
+      <img src="/assets/noodle_spot.png" className="floating-spot spot-noodle" alt="Noodle bowl deco" />
+      <img src="/assets/dumpling_spot.png" className="floating-spot spot-dumpling" alt="Dumpling deco" />
 
       {/* Screen 1 – Welcome */}
       {screen === "welcome" && (
         <div className="screen-content" style={{ justifyContent: "space-between" }}>
-          {/* Top header bar */}
+          
+          {/* Steam particle emitter */}
+          <div className="steam-container">
+            <div className="steam-puff" style={{ animationDelay: "0s" }} />
+            <div className="steam-puff" style={{ animationDelay: "0.8s" }} />
+            <div className="steam-puff" style={{ animationDelay: "1.6s" }} />
+          </div>
+
           <div style={{ textAlign: "center", paddingTop: "1rem" }}>
-            <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: "var(--brand-red)", fontSize: "1.25rem", letterSpacing: "-0.01em" }}>
-              🥟 MOMO KITCHEN
+            <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 900, color: "var(--brand-red)", fontSize: "1.35rem", letterSpacing: "-0.01em" }}>
+              🥟 MOMO CART
             </h3>
           </div>
 
-          {/* Steaming Momo Illustration */}
+          {/* Retro Ink & Watercolor Dumpling Basket illustration */}
           <div className="momo-visual-container">
             <img
               src="/assets/steaming_momos.png"
-              alt="Steaming Momos Illustration"
+              alt="Steaming Hot Dumpling Basket illustration"
               className="momo-image"
             />
           </div>
 
-          {/* Text panel card */}
+          {/* Headline and start CTA */}
           <div className="glass-card" style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
             <h1 className="display-title" style={{ textAlign: "center" }}>
               How was your <span className="gradient-text">meal?</span>
@@ -423,16 +568,16 @@ function CustomerExperienceApp() {
         </div>
       )}
 
-      {/* Screen 2 – Review */}
+      {/* Screen 2 – Review Form */}
       {screen === "review" && (
         <div className="screen-content" style={{ justifyContent: "center" }}>
-          <form onSubmit={handleSubmitReview} className="glass-card" style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+          <form onSubmit={handleSubmitReview} className="glass-card" style={{ display: "flex", flexDirection: "column", gap: "1.15rem" }}>
             <div style={{ textAlign: "center" }}>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.75rem", letterSpacing: "-0.02em" }}>
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "1.75rem", letterSpacing: "-0.02em" }}>
                 How did we do?
               </h2>
-              <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", marginTop: "0.25rem" }}>
-                Your feedback helps us steam better dumplings.
+              <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginTop: "0.2rem" }}>
+                Your feedback helps us steam dumpling baskets better.
               </p>
             </div>
 
@@ -455,7 +600,7 @@ function CustomerExperienceApp() {
               </div>
             </div>
 
-            {/* Feedback text area */}
+            {/* Feedback textarea comments */}
             <div className="form-group">
               <label htmlFor="feedback" className="form-label">
                 Comments
@@ -469,7 +614,7 @@ function CustomerExperienceApp() {
               />
             </div>
 
-            {/* Email Address field */}
+            {/* Optional Email Address input */}
             <div className="form-group">
               <label htmlFor="email" className="form-label">
                 Email Address <span style={{ color: "var(--text-secondary)", fontWeight: 400 }}>(Optional)</span>
@@ -485,7 +630,7 @@ function CustomerExperienceApp() {
             </div>
 
             {formError && (
-              <div style={{ color: "var(--brand-red)", fontWeight: 600, fontSize: "0.875rem", textAlign: "center" }}>
+              <div style={{ color: "var(--brand-red)", fontWeight: 800, fontSize: "0.85rem", textAlign: "center" }}>
                 ⚠️ {formError}
               </div>
             )}
@@ -504,32 +649,31 @@ function CustomerExperienceApp() {
       {/* Screen 3 – Reward Unlock */}
       {screen === "unlock" && (
         <div className="screen-content" style={{ justifyContent: "space-between" }}>
-          {/* Confetti celebration triggers immediately on load */}
           <ConfettiEffect />
 
           <div style={{ textAlign: "center", paddingTop: "1rem" }}>
-            <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: "var(--brand-red)", fontSize: "1.25rem" }}>
+            <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 900, color: "var(--brand-red)", fontSize: "1.25rem" }}>
               🎉 Thank You!
             </h3>
           </div>
 
-          {/* Large glowing gift box */}
+          {/* Large pulsing golden gift box */}
           <div className="gift-visual-container">
             <img
               src="/assets/glowing_gift_box.png"
-              alt="Glowing Gift Box"
+              alt="Pulsing Golden Gift Box"
               className="gift-image"
             />
           </div>
 
-          {/* Description and Action card */}
+          {/* Unlock action card */}
           <div className="glass-card" style={{ display: "flex", flexDirection: "column", gap: "1.25rem", zIndex: 10 }}>
             <div style={{ textAlign: "center" }}>
-              <h2 className="display-title" style={{ fontSize: "1.85rem", marginBottom: "0.5rem" }}>
-                Surprise ready!
+              <h2 className="display-title" style={{ fontSize: "1.8rem", marginBottom: "0.25rem" }}>
+                Surprise Ready!
               </h2>
               <p className="sub-title">
-                Your review unlocked a secret dumpling reward card.
+                Your feedback unlocked a retro secret reward card.
               </p>
             </div>
             <button
@@ -547,24 +691,27 @@ function CustomerExperienceApp() {
         <div className="screen-content" style={{ justifyContent: "center" }}>
           <div className="glass-card" style={{ display: "flex", flexDirection: "column", gap: "1.25rem", textAlign: "center" }}>
             <div>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.75rem", letterSpacing: "-0.02em" }}>
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "1.75rem", letterSpacing: "-0.02em" }}>
                 Scratch to Reveal
               </h2>
-              <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", marginTop: "0.25rem" }}>
-                Swipe your finger on the metallic card below to reveal your prize.
+              <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginTop: "0.2rem" }}>
+                Drag your finger on the ticket below to reveal your prize.
               </p>
             </div>
 
-            {/* Silver Scratch Canvas wrapper */}
+            {/* Silver Scratch Canvas wrapper with procedural audio engine connection */}
             <div className="scratch-area">
-              <ScratchCard
-                rewardText={rewardText}
-                onReveal={() => setScreen("revealed")}
-              />
+              {audioSynthRef.current && (
+                <ScratchCard
+                  rewardText={rewardText}
+                  onReveal={() => setScreen("revealed")}
+                  audioSynth={audioSynthRef.current}
+                />
+              )}
             </div>
 
-            <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", fontStyle: "italic" }}>
-              Scratch at least 60% of the surface to reveal.
+            <p style={{ fontSize: "0.78rem", color: "var(--text-secondary)", fontStyle: "italic" }}>
+              Scratch at least 55% of the card to reveal.
             </p>
           </div>
         </div>
@@ -574,38 +721,38 @@ function CustomerExperienceApp() {
       {screen === "revealed" && (
         <div className="screen-content" style={{ justifyContent: "center" }}>
           <ConfettiEffect />
-          <div className="glass-card" style={{ display: "flex", flexDirection: "column", gap: "1.5rem", alignItems: "center", textAlign: "center", position: "relative" }}>
+          <div className="glass-card" style={{ display: "flex", flexDirection: "column", gap: "1.25rem", alignItems: "center", textAlign: "center", position: "relative" }}>
             <SparkleLayer />
             
-            {/* Header / Expiry */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", alignItems: "center" }}>
+            {/* Expiry / Header */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", alignItems: "center" }}>
               <span className="badge-expiry">Valid Today Only</span>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.85rem" }}>
-                Presents Unlocked!
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "1.75rem" }}>
+                Prize Unlocked!
               </h2>
             </div>
 
             {/* Revealed Prize details card */}
             <div style={{
-              background: "linear-gradient(135deg, #FFF9F3 0%, #FFF0E4 100%)",
-              border: "1.5px solid rgba(237,137,54,0.18)",
-              borderRadius: "20px",
-              padding: "1.5rem",
+              background: "#FFFDFB",
+              border: "1.5px solid var(--text-primary)",
+              borderRadius: "16px",
+              padding: "1.25rem",
               width: "100%",
               boxShadow: "var(--shadow-sm)"
             }}>
-              <div style={{ fontSize: "2.75rem", marginBottom: "0.25rem" }}>
-                {rewardText.includes("Momos") ? "🥟" : rewardText.includes("10%") ? "🎁" : rewardText.includes("Drink") ? "🥤" : "🍟"}
+              <div style={{ fontSize: "2.5rem", marginBottom: "0.15rem" }}>
+                {rewardText.includes("Momos") ? "🥟" : rewardText.includes("OFF") ? "🎁" : rewardText.includes("Drink") ? "🥤" : "🍟"}
               </div>
-              <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.65rem", color: "var(--brand-red)" }}>
+              <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "1.55rem", color: "var(--brand-red)" }}>
                 {rewardText}
               </h3>
-              <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginTop: "0.25rem" }}>
-                Enjoy this reward on your current or next visit.
+              <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginTop: "0.2rem" }}>
+                Enjoy this reward on your current or next purchase.
               </p>
             </div>
 
-            {/* Coupon code container */}
+            {/* Copyable Coupon Code */}
             <div style={{ width: "100%" }}>
               <div className="coupon-box" onClick={handleCopyCode}>
                 <span>{couponCode}</span>
@@ -615,10 +762,10 @@ function CustomerExperienceApp() {
                 {copyFeedback && (
                   <span style={{
                     position: "absolute",
-                    top: "-24px",
+                    top: "-22px",
                     background: "var(--text-primary)",
                     color: "white",
-                    fontSize: "0.75rem",
+                    fontSize: "0.7rem",
                     padding: "2px 6px",
                     borderRadius: "4px",
                     fontFamily: "var(--font-body)"
@@ -629,15 +776,15 @@ function CustomerExperienceApp() {
               </div>
             </div>
 
-            {/* QR verification graphic */}
+            {/* QR verification code */}
             <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem", alignItems: "center" }}>
               <QRCodeIcon value={couponCode} />
-              <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)", fontWeight: 500, marginTop: "0.5rem" }}>
-                Scan Code for Redemption
+              <span style={{ fontSize: "0.72rem", color: "var(--text-secondary)", fontWeight: 600, marginTop: "0.4rem" }}>
+                Scan Code at Register
               </span>
             </div>
 
-            {/* Verification CTA */}
+            {/* Redemption CTA */}
             <button
               onClick={() => setIsClaimModalOpen(true)}
               className="btn-primary"
@@ -649,12 +796,12 @@ function CustomerExperienceApp() {
         </div>
       )}
 
-      {/* Cashier Verification Modal Sheet */}
+      {/* Cashier Redemption Confirmation Sheet */}
       {isClaimModalOpen && (
         <div className="modal-overlay" onClick={() => setIsClaimModalOpen(false)}>
           <div className="modal-sheet" onClick={(e) => e.stopPropagation()}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-              <h3 className="modal-title">Cashier Redemption</h3>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+              <h3 className="modal-title">Cashier Verification</h3>
               <button
                 onClick={() => setIsClaimModalOpen(false)}
                 style={{ background: "none", border: "none", fontSize: "1.5rem", cursor: "pointer", color: "var(--text-secondary)" }}
@@ -664,42 +811,43 @@ function CustomerExperienceApp() {
             </div>
             
             {!isClaimed ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                <p style={{ fontSize: "0.95rem", color: "var(--text-secondary)", lineHeight: 1.4 }}>
-                  Please present this screen to the cashier. The cashier will confirm the reward code:
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.45 }}>
+                  Please present this to the cashier to redeem the offer:
                 </p>
-                <div style={{ background: "#F7FAFC", border: "1px solid #E2E8F0", padding: "0.75rem 1rem", borderRadius: "8px", textAlign: "center", fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "1.1rem" }}>
+                <div style={{ background: "var(--brand-beige)", border: "1.5px solid var(--text-primary)", padding: "0.7rem 1rem", borderRadius: "8px", textAlign: "center", fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "1.1rem" }}>
                   {couponCode}
                 </div>
                 <button
                   onClick={handleCashierRedeem}
                   disabled={isClaiming}
                   className="btn-primary"
-                  style={{ background: "var(--brand-orange)", boxShadow: "0 4px 12px rgba(237, 137, 54, 0.25)" }}
+                  style={{ background: "var(--brand-orange)", boxShadow: "0 3px 0 var(--text-primary)" }}
                 >
-                  {isClaiming ? "Verifying..." : "Confirm Redeemed"}
+                  {isClaiming ? "Redeeming..." : "Confirm Redeemed"}
                 </button>
               </div>
             ) : (
-              <div style={{ textAlign: "center", padding: "1.5rem 0", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.75rem" }}>
+              <div style={{ textAlign: "center", padding: "1.25rem 0", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.6rem" }}>
                 <div style={{
-                  width: "56px",
-                  height: "56px",
+                  width: "52px",
+                  height: "52px",
                   borderRadius: "50%",
                   background: "#C6F6D5",
                   color: "#22543D",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "1.75rem"
+                  fontSize: "1.55rem",
+                  border: "2px solid #22543D"
                 }}>
                   ✓
                 </div>
-                <h4 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.25rem" }}>
+                <h4 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.2rem" }}>
                   Redeemed Successfully
                 </h4>
-                <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)" }}>
-                  This coupon code has been marked as claimed in the system.
+                <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
+                  This coupon has been validated and marked as claimed.
                 </p>
               </div>
             )}

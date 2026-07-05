@@ -1,18 +1,20 @@
-/* Momo Review & Rewards Design System */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+/* Retro Japanese Street-Food Momo Design System */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
 
 :root {
-  --bg-color: #FFFBF7; /* Warm light cream */
-  --card-bg: rgba(255, 255, 255, 0.85); /* Semi-transparent white */
-  --text-primary: #2C1E1A; /* Rich espresso dark chocolate */
-  --text-secondary: #705D56; /* Soft warm charcoal */
-  --brand-red: #E53E3E; /* Spicy vermilion */
-  --brand-orange: #ED8936; /* Sweet orange */
-  --brand-gold: #ECC94B; /* Honey yellow */
-  --border-color: rgba(237, 137, 54, 0.15); /* Soft orange tint border */
-  --shadow-sm: 0 4px 12px rgba(44, 30, 26, 0.04);
-  --shadow-md: 0 10px 25px rgba(229, 62, 62, 0.08);
-  --shadow-lg: 0 20px 40px rgba(44, 30, 26, 0.08);
+  --bg-color: #FFF9F2; /* Cream paper base */
+  --card-bg: rgba(255, 253, 250, 0.92); /* Textured off-white card */
+  --text-primary: #362521; /* Charcoal-brown text */
+  --text-secondary: #6B554F; /* Warm brown-grey */
+  --brand-red: #E5422B; /* Vibrant tomato red */
+  --brand-orange: #F09456; /* Warm apricot orange */
+  --brand-gold: #ECC94B; /* Honey gold */
+  --brand-beige: #F5EAD4; /* Soft sand beige */
+  --border-color: rgba(54, 37, 33, 0.15); /* Soft charcoal-brown border */
+  --border-double: 3px double rgba(54, 37, 33, 0.3); /* Retro double line border */
+  --shadow-sm: 0 4px 10px rgba(54, 37, 33, 0.04);
+  --shadow-md: 0 10px 24px rgba(54, 37, 33, 0.06);
+  --shadow-lg: 0 20px 40px rgba(54, 37, 33, 0.08);
   --font-display: 'Outfit', -apple-system, sans-serif;
   --font-body: 'Inter', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -25,7 +27,7 @@
 }
 
 body {
-  background-color: #F8F1EB; /* Warm peach-cream fallback */
+  background-color: #EADECF; /* Vintage card backing */
   color: var(--text-primary);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -34,24 +36,28 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
-/* Ambient steam gradients in background */
+/* App container wraps mobile frame with paper grain */
 .app-container {
   width: 100%;
-  max-width: 480px; /* Native mobile feel */
+  max-width: 480px;
   min-height: 100vh;
   min-height: 100dvh;
   background-color: var(--bg-color);
+  background-image: linear-gradient(rgba(255, 249, 242, 0.25), rgba(245, 234, 212, 0.15)), url('/assets/paper_texture.png');
+  background-size: cover, 400px 400px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 40px rgba(44, 30, 26, 0.08);
+  box-shadow: 0 0 50px rgba(54, 37, 33, 0.18);
   display: flex;
   flex-direction: column;
-  border-left: 1px solid rgba(229, 62, 62, 0.05);
-  border-right: 1px solid rgba(229, 62, 62, 0.05);
+  border-left: 2px solid rgba(54, 37, 33, 0.08);
+  border-right: 2px solid rgba(54, 37, 33, 0.08);
 }
 
+/* Soft animated steam overlay in background */
 .steam-overlay {
   position: absolute;
   top: 0;
@@ -61,67 +67,119 @@ body {
   z-index: 1;
   pointer-events: none;
   background: 
-    radial-gradient(circle at 10% 20%, rgba(237, 137, 54, 0.06), transparent 40%),
-    radial-gradient(circle at 90% 70%, rgba(229, 62, 62, 0.06), transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(236, 201, 75, 0.04), transparent 50%);
-  filter: blur(40px);
-  animation: steamFlow 12s ease-in-out infinite alternate;
+    radial-gradient(circle at 15% 25%, rgba(240, 148, 86, 0.03), transparent 30%),
+    radial-gradient(circle at 85% 75%, rgba(229, 66, 43, 0.03), transparent 30%);
+  filter: blur(30px);
+  animation: steamDrift 10s ease-in-out infinite alternate;
 }
 
-@keyframes steamFlow {
-  0% { transform: scale(1) translate(0, 0); }
-  50% { transform: scale(1.08) translate(-2%, 3%); }
-  100% { transform: scale(1) translate(2%, -2%); }
+@keyframes steamDrift {
+  0% { transform: scale(1) translate(0, 0); opacity: 0.6; }
+  50% { transform: scale(1.05) translate(-1%, 2%); opacity: 0.8; }
+  100% { transform: scale(1) translate(1%, -1%); opacity: 0.6; }
+}
+
+/* Rising steam keyframe animations */
+.steam-container {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 15px;
+  z-index: 2;
+  opacity: 0.25;
+}
+
+.steam-puff {
+  width: 8px;
+  height: 24px;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+  border-radius: 50%;
+  filter: blur(3px);
+  animation: riseSteam 3.5s ease-in-out infinite;
+}
+
+@keyframes riseSteam {
+  0% { transform: translateY(100px) scaleX(0.5) scaleY(0.5); opacity: 0; }
+  50% { opacity: 0.8; transform: translateY(40px) scaleX(1.2) scaleY(1.2); }
+  100% { transform: translateY(-20px) scaleX(1.8) scaleY(0.8); opacity: 0; }
 }
 
 .screen-content {
   position: relative;
-  z-index: 2;
+  z-index: 5;
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 1.75rem;
+  padding: 1.5rem;
   justify-content: space-between;
   width: 100%;
 }
 
-/* Glassmorphism Card Style */
+/* Floating Retro Japanese street food spot illustrations */
+.floating-spot {
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+  mix-blend-mode: multiply; /* Blends watercolor textures perfectly into paper grain */
+  opacity: 0.18;
+  transition: transform 0.3s ease;
+}
+
+.spot-noodle {
+  width: 120px;
+  height: 120px;
+  top: 5%;
+  right: -25px;
+  transform: rotate(15deg);
+}
+
+.spot-dumpling {
+  width: 100px;
+  height: 100px;
+  bottom: 8%;
+  left: -20px;
+  transform: rotate(-10deg);
+}
+
+/* Retro double-bordered glass card */
 .glass-card {
   background: var(--card-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: var(--shadow-md);
-  border-radius: 24px;
+  border: 1.5px solid rgba(54, 37, 33, 0.12);
+  outline: 4px solid rgba(255, 253, 250, 0.6);
+  box-shadow: var(--shadow-md), inset 0 0 20px rgba(245, 234, 212, 0.15);
+  border-radius: 20px;
   padding: 1.75rem;
   width: 100%;
   position: relative;
   overflow: hidden;
 }
 
-.glass-card::before {
+.glass-card::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(237, 137, 54, 0.02) 0%, rgba(229, 62, 62, 0.02) 100%);
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  border: 1px dashed rgba(54, 37, 33, 0.15);
+  border-radius: 14px;
   pointer-events: none;
 }
 
 /* Typography elements */
 .display-title {
   font-family: var(--font-display);
-  font-size: 2.25rem;
-  font-weight: 800;
+  font-size: 2.15rem;
+  font-weight: 900;
   line-height: 1.1;
   color: var(--text-primary);
   letter-spacing: -0.03em;
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--brand-red) 0%, var(--brand-orange) 100%);
+  background: linear-gradient(135deg, var(--brand-red) 0%, #B82E1B 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -129,8 +187,8 @@ body {
 
 .sub-title {
   font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 0.95rem;
+  line-height: 1.45;
   color: var(--text-secondary);
 }
 
@@ -140,22 +198,22 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  background: linear-gradient(135deg, var(--brand-red) 0%, #D43030 100%);
-  color: white;
+  background: var(--brand-red);
+  color: #FFFBF7;
   font-family: var(--font-display);
-  font-size: 1.125rem;
-  font-weight: 700;
-  padding: 1.1rem;
-  border-radius: 18px;
-  border: none;
+  font-size: 1.1rem;
+  font-weight: 800;
+  padding: 1rem;
+  border-radius: 14px;
+  border: 2px solid var(--text-primary);
   cursor: pointer;
-  box-shadow: 0 10px 20px rgba(229, 62, 62, 0.2);
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
+  box-shadow: 0 4px 0 var(--text-primary);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 .btn-primary:active {
-  transform: scale(0.97);
-  box-shadow: 0 4px 10px rgba(229, 62, 62, 0.15);
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--text-primary);
 }
 
 .btn-gold {
@@ -163,19 +221,19 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  background: linear-gradient(135deg, var(--brand-orange) 0%, var(--brand-gold) 100%);
-  color: white;
+  background: var(--brand-orange);
+  color: #FFFBF7;
   font-family: var(--font-display);
-  font-size: 1.125rem;
-  font-weight: 700;
-  padding: 1.1rem;
-  border-radius: 18px;
-  border: none;
+  font-size: 1.1rem;
+  font-weight: 800;
+  padding: 1rem;
+  border-radius: 14px;
+  border: 2px solid var(--text-primary);
   cursor: pointer;
-  box-shadow: 0 10px 20px rgba(237, 137, 54, 0.2);
+  box-shadow: 0 4px 0 var(--text-primary);
   position: relative;
   overflow: hidden;
-  transition: transform 0.2s ease;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 .btn-gold::after {
@@ -185,26 +243,22 @@ body {
   left: -50%;
   width: 20%;
   height: 100%;
-  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
   transform: skewX(-25deg);
-  animation: shine 2.5s infinite;
-}
-
-@keyframes shine {
-  0% { left: -50%; }
-  100% { left: 150%; }
+  animation: shine 3s infinite;
 }
 
 .btn-gold:active {
-  transform: scale(0.97);
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--text-primary);
 }
 
 /* Star Rating component states */
 .stars-container {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
   justify-content: center;
-  margin: 1.25rem 0;
+  margin: 1rem 0;
 }
 
 .star-btn {
@@ -214,66 +268,68 @@ body {
   transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.star-btn:active {
-  transform: scale(0.85);
+.star-btn:hover {
+  transform: scale(1.15) rotate(5deg);
 }
 
 .star-icon {
-  width: 44px;
-  height: 44px;
-  fill: #E2E8F0; /* Slate fallback */
-  transition: fill 0.2s ease, filter 0.2s ease;
+  width: 42px;
+  height: 42px;
+  fill: #EAE3D2;
+  transition: fill 0.15s ease, filter 0.15s ease;
 }
 
 .star-icon.filled {
   fill: var(--brand-gold);
-  filter: drop-shadow(0 0 6px rgba(236, 201, 75, 0.5));
+  filter: drop-shadow(0 0 4px rgba(236, 201, 75, 0.4));
 }
 
 .rating-label {
   text-align: center;
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--brand-orange);
-  min-height: 1.75rem;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--brand-red);
+  min-height: 1.5rem;
 }
 
 /* Inputs and Forms */
 .form-group {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 .form-label {
   display: block;
   font-family: var(--font-display);
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .form-control {
   width: 100%;
   background: #FFF;
-  border: 1.5px solid var(--border-color);
-  border-radius: 12px;
-  padding: 0.875rem 1rem;
+  border: 1.5px solid var(--text-primary);
+  border-radius: 10px;
+  padding: 0.8rem 0.95rem;
   font-family: var(--font-body);
   font-size: 0.95rem;
   color: var(--text-primary);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: inset 0 2px 4px rgba(54, 37, 33, 0.04);
 }
 
 .form-control:focus {
   outline: none;
-  border-color: var(--brand-orange);
-  box-shadow: 0 0 0 3px rgba(237, 137, 54, 0.1);
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(229, 66, 43, 0.1);
 }
 
 textarea.form-control {
   resize: none;
-  min-height: 100px;
+  min-height: 90px;
 }
 
 /* Steaming Momo illustration bounce/steam */
@@ -281,21 +337,22 @@ textarea.form-control {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 250px;
+  height: 240px;
   position: relative;
+  mix-blend-mode: multiply; /* Watercolor blending */
 }
 
 .momo-image {
   width: 220px;
   height: 220px;
   object-fit: contain;
-  animation: floatMomo 4s ease-in-out infinite;
+  animation: floatMomo 5s ease-in-out infinite;
 }
 
 @keyframes floatMomo {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0); }
+  0% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-6px) rotate(1deg); }
+  100% { transform: translateY(0) rotate(0); }
 }
 
 /* Gift Box Screen styling */
@@ -303,21 +360,21 @@ textarea.form-control {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 230px;
+  height: 220px;
   position: relative;
 }
 
 .gift-image {
-  width: 200px;
-  height: 200px;
+  width: 190px;
+  height: 190px;
   object-fit: contain;
-  animation: pulseGift 2s ease-in-out infinite;
+  animation: pulseGift 2.2s ease-in-out infinite;
 }
 
 @keyframes pulseGift {
-  0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(236, 201, 75, 0.2)); }
-  50% { transform: scale(1.06); filter: drop-shadow(0 0 25px rgba(236, 201, 75, 0.6)); }
-  100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(236, 201, 75, 0.2)); }
+  0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(240, 148, 86, 0.1)); }
+  50% { transform: scale(1.05); filter: drop-shadow(0 0 18px rgba(240, 148, 86, 0.4)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(240, 148, 86, 0.1)); }
 }
 
 /* Scratch Card screen */
@@ -325,15 +382,15 @@ textarea.form-control {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 1.5rem 0;
+  margin: 1rem 0;
   position: relative;
   width: 100%;
-  aspect-ratio: 1; /* Square scratch layout */
-  background-color: #FEEBC8; /* Peach-orange card back */
-  border-radius: 24px;
+  aspect-ratio: 1.1;
+  background-color: var(--brand-beige);
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  border: 2px solid rgba(237, 137, 54, 0.1);
+  border: 2px solid var(--text-primary);
+  box-shadow: inset 0 4px 8px rgba(54, 37, 33, 0.08);
 }
 
 .scratch-canvas {
@@ -363,12 +420,12 @@ textarea.form-control {
 
 /* Coupon Box */
 .coupon-box {
-  background: #FFF5F5;
+  background: var(--brand-beige);
   border: 2px dashed var(--brand-red);
-  border-radius: 12px;
-  padding: 0.85rem 1.5rem;
+  border-radius: 10px;
+  padding: 0.75rem 1.25rem;
   font-family: var(--font-mono);
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--brand-red);
   text-align: center;
@@ -379,20 +436,22 @@ textarea.form-control {
   justify-content: center;
   gap: 0.5rem;
   cursor: pointer;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
 }
 
 /* Expired timer badge */
 .badge-expiry {
   display: inline-flex;
   align-items: center;
-  background: rgba(229, 62, 62, 0.1);
+  background: rgba(229, 66, 43, 0.08);
   color: var(--brand-red);
-  font-weight: 700;
+  font-weight: 800;
   font-size: 0.75rem;
-  padding: 0.35rem 0.75rem;
+  padding: 0.3rem 0.75rem;
   border-radius: 9999px;
+  border: 1px solid rgba(229, 66, 43, 0.15);
   font-family: var(--font-display);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -403,8 +462,8 @@ textarea.form-control {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(44, 30, 26, 0.6);
-  backdrop-filter: blur(4px);
+  background: rgba(54, 37, 33, 0.5);
+  backdrop-filter: blur(2px);
   z-index: 100;
   display: flex;
   justify-content: center;
@@ -412,28 +471,25 @@ textarea.form-control {
 }
 
 .modal-sheet {
-  background: #FFF;
-  border-top-left-radius: 28px;
-  border-top-right-radius: 28px;
+  background: var(--bg-color);
+  background-image: url('/assets/paper_texture.png');
+  border-top: 3px solid var(--text-primary);
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
   width: 100%;
-  padding: 2.25rem 1.75rem 2.5rem;
-  box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
-  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  padding: 2rem 1.5rem 2.25rem;
+  box-shadow: 0 -8px 30px rgba(54, 37, 33, 0.15);
+  animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .modal-title {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.5rem;
-  margin-bottom: 0.75rem;
+  font-weight: 800;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
 }
 
-/* Confetti particles container */
+/* Confetti wrapper */
 .confetti-wrapper {
   position: absolute;
   top: 0;
