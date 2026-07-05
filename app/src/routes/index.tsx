@@ -688,8 +688,8 @@ function CustomerExperienceApp() {
           {/* Large pulsing golden gift box */}
           <div className="gift-visual-container">
             <img
-              src="/assets/glowing_gift_box.png"
-              alt="Pulsing Golden Gift Box"
+              src="/assets/gift_box.png"
+              alt="Pulsing Surprise Gift Box"
               className="gift-image"
             />
           </div>
