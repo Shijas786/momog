@@ -1,3 +1,4 @@
 {
-  "name": "momoji-experience"
+  "name": "momoji-experience",
+  "outputDirectory": ".vercel/output"
 }
