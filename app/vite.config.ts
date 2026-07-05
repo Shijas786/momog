@@ -1,4 +1,5 @@
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import { nitro } from "nitro/vite";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import {
@@ -73,6 +74,7 @@ export default defineConfig(({ mode }) => {
       tanstackStart(
         process.env.VERCEL ? {} : { server: { entry: "server" } }
       ),
+      process.env.VERCEL ? (nitro() as any) : null,
       higgsfieldDesignInspectorVitePlugin(designInspectorEnabled),
       react({
         babel: {
@@ -81,6 +83,6 @@ export default defineConfig(({ mode }) => {
       }),
       tailwindcss(),
       tsconfigPaths(),
-    ],
+    ].filter(Boolean),
   };
 });
