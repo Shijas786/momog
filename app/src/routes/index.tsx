@@ -519,6 +519,17 @@ function CustomerExperienceApp() {
       {/* Background steam gradient shift */}
       <div className="steam-overlay" />
 
+      {/* Cinematic retro video background */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="video-background"
+      >
+        <source src="/assets/background_video.mp4" type="video/mp4" />
+      </video>
+
       {/* Floating Retro Japanese food spot illustrations */}
       <img src="/assets/noodle_spot.png" className="floating-spot spot-noodle" alt="Noodle bowl deco" />
       <img src="/assets/dumpling_spot.png" className="floating-spot spot-dumpling" alt="Dumpling deco" />
