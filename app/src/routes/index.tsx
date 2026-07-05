@@ -229,26 +229,43 @@ function ScratchCard({ rewardText, onReveal, audioSynth }: ScratchCardProps) {
     };
 
     const drawSilverCover = () => {
-      const img = new Image();
-      img.src = "/assets/silver_texture.png";
-      img.onload = () => {
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        drawCoverText();
-      };
-      img.onerror = () => {
-        // Fallback card fill
-        ctx.fillStyle = "#C0C4CC";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        drawCoverText();
-      };
+      // Brushed silver metallic gradient
+      const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      grad.addColorStop(0, "#C5C9CD");
+      grad.addColorStop(0.35, "#E2E5E8");
+      grad.addColorStop(0.7, "#D0D4D8");
+      grad.addColorStop(1, "#A2A6AA");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Fine brushed metallic scratch texture strokes
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.45)";
+      ctx.lineWidth = 1.2;
+      for (let i = 0; i < canvas.height; i += 3) {
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * 15, i);
+        ctx.lineTo(canvas.width - Math.random() * 15, i + (Math.random() * 2 - 1));
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = "rgba(0, 0, 0, 0.06)";
+      ctx.lineWidth = 1.0;
+      for (let i = 0; i < canvas.height; i += 5) {
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * 15, i);
+        ctx.lineTo(canvas.width - Math.random() * 15, i + (Math.random() * 2 - 1));
+        ctx.stroke();
+      }
+
+      drawCoverText();
     };
 
     const drawCoverText = () => {
-      ctx.fillStyle = "#362521";
-      ctx.font = 'bold 22px "Outfit", sans-serif';
+      ctx.fillStyle = "#606468"; // Charcoal grey matching reference image
+      ctx.font = '800 17px "Outfit", sans-serif';
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("Scratch Ticket 🥟", canvas.width / 2, canvas.height / 2);
+      ctx.fillText("SCRATCH HERE", canvas.width / 2, canvas.height / 2);
     };
 
     initCanvas();
@@ -362,7 +379,7 @@ function ScratchCard({ rewardText, onReveal, audioSynth }: ScratchCardProps) {
       <div className="scratch-reveal-content">
         <SparkleLayer />
         <h4 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.15rem", color: "var(--brand-orange)", marginBottom: "0.25rem" }}>LUCKY REWARD</h4>
-        <div style={{ fontSize: "2rem", fontWeight: 900, textAlign: "center", color: "var(--brand-red)", animation: "floatMomo 4s ease-in-out infinite" }}>
+        <div style={{ fontSize: "2rem", fontWeight: 900, textAlign: "center", color: "var(--brand-gold)", animation: "floatMomo 4s ease-in-out infinite" }}>
           {rewardText}
         </div>
       </div>
@@ -700,30 +717,43 @@ function CustomerExperienceApp() {
       {/* Screen 4 – Scratch Card */}
       {screen === "scratch" && (
         <div className="screen-content" style={{ justifyContent: "center" }}>
-          <div className="glass-card" style={{ display: "flex", flexDirection: "column", gap: "1.25rem", textAlign: "center" }}>
-            <div>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "1.75rem", letterSpacing: "-0.02em" }}>
-                Scratch to Reveal
-              </h2>
-              <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginTop: "0.2rem" }}>
-                Drag your finger on the ticket below to reveal your prize.
-              </p>
-            </div>
+          <div className="scratch-card-container">
+            <div className="retro-scratch-card">
+              <div className="scratch-card-body">
+                {/* Left Column: Logo */}
+                <div className="scratch-card-left">
+                  <img src="/assets/front_logo.png" className="scratch-card-logo" alt="MOMOJI Logo" />
+                </div>
 
-            {/* Silver Scratch Canvas wrapper with procedural audio engine connection */}
-            <div className="scratch-area">
-              {audioSynthRef.current && (
-                <ScratchCard
-                  rewardText={rewardText}
-                  onReveal={() => setScreen("revealed")}
-                  audioSynth={audioSynthRef.current}
-                />
-              )}
-            </div>
+                {/* Right Column: Title and Canvas Scratch Box */}
+                <div className="scratch-card-right">
+                  <div className="scratch-win-title">
+                    <span className="text-scratch">SCRATCH</span>
+                    <span className="text-win">& WIN!</span>
+                  </div>
 
-            <p style={{ fontSize: "0.78rem", color: "var(--text-secondary)", fontStyle: "italic" }}>
-              Scratch at least 55% of the card to reveal.
-            </p>
+                  {/* Silver scratch box */}
+                  <div className="scratch-area-wrapper">
+                    <div className="scratch-area" style={{ width: "100%", height: "100%", margin: 0, border: "none", borderRadius: 0, boxShadow: "none" }}>
+                      {audioSynthRef.current && (
+                        <ScratchCard
+                          rewardText={rewardText}
+                          onReveal={() => setScreen("revealed")}
+                          audioSynth={audioSynthRef.current}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Tagline Footer */}
+              <div className="scratch-card-footer">
+                <span className="footer-diamond">✦</span>
+                <span>STEAMING GOOD VIBES</span>
+                <span className="footer-diamond">✦</span>
+              </div>
+            </div>
           </div>
         </div>
       )}

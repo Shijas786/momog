@@ -71,9 +71,9 @@ export default defineConfig(({ mode }) => {
       // SSR-safe: never touch browser-only globals (window, document,
       // localStorage, navigator) during render or at module top level — only
       // inside effects/handlers, or guarded with `typeof window !== "undefined"`.
-      tanstackStart({
-        server: { entry: "server" },
-      }),
+      tanstackStart(
+        process.env.VERCEL ? {} : { server: { entry: "server" } }
+      ),
       higgsfieldDesignInspectorVitePlugin(designInspectorEnabled),
       react({
         babel: {

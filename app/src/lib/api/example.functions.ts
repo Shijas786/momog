@@ -10,7 +10,7 @@ export const getGreeting = createServerFn({ method: "POST" })
     const { DB, HF_ENV } = bindings();
     let count = 0;
     if (DB) {
-      const row = await DB.prepare("SELECT 1 AS n").first<{ n: number }>();
+      const row = (await DB.prepare("SELECT 1 AS n").first()) as { n: number } | null;
       count = row?.n ?? 0;
     }
     return { greeting: `Hello, ${data.name}!`, env: HF_ENV ?? "unknown", count };
