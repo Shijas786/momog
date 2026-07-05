@@ -547,7 +547,7 @@ function CustomerExperienceApp() {
 
           <div style={{ textAlign: "center", paddingTop: "1rem" }}>
             <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 900, color: "var(--brand-red)", fontSize: "1.35rem", letterSpacing: "-0.01em" }}>
-              🥟 MOMO CART
+              🥟 MOMOJI
             </h3>
           </div>
 
