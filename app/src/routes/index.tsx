@@ -114,12 +114,13 @@ class AudioSynthEngine {
 }
 
 // Custom star SVG icons
-function StarIcon({ filled, onClick, index }: { filled: boolean; onClick: () => void; index: number }) {
+function StarIcon({ filled, onClick, index, onMouseEnter }: { filled: boolean; onClick: () => void; index: number; onMouseEnter?: () => void }) {
   return (
     <button 
       type="button" 
       className="star-btn" 
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
       style={{ animationDelay: `${index * 0.08}s` }}
     >
       <svg
@@ -543,8 +544,12 @@ function CustomerExperienceApp() {
   const [screen, setScreen] = useState<"welcome" | "review" | "unlock" | "scratch" | "revealed">("welcome");
   
   // Review form states
-  const [rating, setRating] = useState<number>(0);
-  const [hoverRating, setHoverRating] = useState<number>(0);
+  const [ratingFood, setRatingFood] = useState<number>(0);
+  const [hoverRatingFood, setHoverRatingFood] = useState<number>(0);
+  const [ratingService, setRatingService] = useState<number>(0);
+  const [hoverRatingService, setHoverRatingService] = useState<number>(0);
+  const [ratingVibe, setRatingVibe] = useState<number>(0);
+  const [hoverRatingVibe, setHoverRatingVibe] = useState<number>(0);
   const [email, setEmail] = useState<string>("");
   const [feedback, setFeedback] = useState<string>("");
   
@@ -568,7 +573,7 @@ function CustomerExperienceApp() {
     audioSynthRef.current = new AudioSynthEngine();
   }, []);
 
-  const ratingTexts = ["", "Terrible 😟", "Okay 😐", "Good 😊", "Delicious! 😋", "Heavenly! 🥟"];
+  const ratingEmoji = ["", "😟", "😐", "😊", "😋", "🤩"];
 
   const handleStartReview = () => {
     if (audioSynthRef.current) {
@@ -580,18 +585,21 @@ function CustomerExperienceApp() {
 
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (rating === 0) {
-      setFormError("Please select a star rating first!");
+    if (ratingFood === 0 || ratingService === 0 || ratingVibe === 0) {
+      setFormError("Please rate all three categories!");
       return;
     }
     setFormError("");
     setIsSubmitting(true);
 
+    // Average all three sub-ratings for the overall score sent to DB
+    const overallRating = Math.round((ratingFood + ratingService + ratingVibe) / 3);
+
     try {
       const res = await submitReview({
         data: {
           email: email || null,
-          rating,
+          rating: overallRating,
           feedback: feedback || null,
         }
       });
@@ -701,23 +709,66 @@ function CustomerExperienceApp() {
               </p>
             </div>
 
-            {/* Interactive Rating Component */}
-            <div>
-              <div className="stars-container">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <StarIcon
-                    key={star}
-                    index={star - 1}
-                    filled={hoverRating ? star <= hoverRating : star <= rating}
-                    onClick={() => {
-                      setRating(star);
-                      setFormError("");
-                    }}
-                  />
-                ))}
+            {/* Multi-category Rating Component */}
+            <div className="category-ratings">
+              {/* Food Quality */}
+              <div className="category-row">
+                <div className="category-label-row">
+                  <span className="category-icon">🥟</span>
+                  <span className="category-name">Food Quality</span>
+                  <span className="category-emoji">{ratingEmoji[hoverRatingFood || ratingFood]}</span>
+                </div>
+                <div className="stars-container compact">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <StarIcon
+                      key={star}
+                      index={star - 1}
+                      filled={hoverRatingFood ? star <= hoverRatingFood : star <= ratingFood}
+                      onClick={() => { setRatingFood(star); setFormError(""); }}
+                      onMouseEnter={() => setHoverRatingFood(star)}
+                    />
+                  ))}
+                </div>
               </div>
-              <div className="rating-label">
-                {ratingTexts[hoverRating || rating] || "Tap a star to rate"}
+
+              {/* Customer Service */}
+              <div className="category-row">
+                <div className="category-label-row">
+                  <span className="category-icon">🙏</span>
+                  <span className="category-name">Service</span>
+                  <span className="category-emoji">{ratingEmoji[hoverRatingService || ratingService]}</span>
+                </div>
+                <div className="stars-container compact">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <StarIcon
+                      key={star}
+                      index={star - 1}
+                      filled={hoverRatingService ? star <= hoverRatingService : star <= ratingService}
+                      onClick={() => { setRatingService(star); setFormError(""); }}
+                      onMouseEnter={() => setHoverRatingService(star)}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Ambiance / Vibe */}
+              <div className="category-row">
+                <div className="category-label-row">
+                  <span className="category-icon">✨</span>
+                  <span className="category-name">Vibe & Ambiance</span>
+                  <span className="category-emoji">{ratingEmoji[hoverRatingVibe || ratingVibe]}</span>
+                </div>
+                <div className="stars-container compact">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <StarIcon
+                      key={star}
+                      index={star - 1}
+                      filled={hoverRatingVibe ? star <= hoverRatingVibe : star <= ratingVibe}
+                      onClick={() => { setRatingVibe(star); setFormError(""); }}
+                      onMouseEnter={() => setHoverRatingVibe(star)}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 
