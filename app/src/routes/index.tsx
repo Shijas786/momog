@@ -715,8 +715,7 @@ function CustomerExperienceApp() {
               <div className="category-row">
                 <div className="category-label-row">
                   <span className="category-icon">🥟</span>
-                  <span className="category-name">Food Quality</span>
-                  <span className="category-emoji">{ratingEmoji[hoverRatingFood || ratingFood]}</span>
+                  <span className="category-name">Food</span>
                 </div>
                 <div className="stars-container compact">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -729,6 +728,7 @@ function CustomerExperienceApp() {
                     />
                   ))}
                 </div>
+                <span className="category-emoji">{ratingEmoji[hoverRatingFood || ratingFood]}</span>
               </div>
 
               {/* Customer Service */}
@@ -736,7 +736,6 @@ function CustomerExperienceApp() {
                 <div className="category-label-row">
                   <span className="category-icon">🙏</span>
                   <span className="category-name">Service</span>
-                  <span className="category-emoji">{ratingEmoji[hoverRatingService || ratingService]}</span>
                 </div>
                 <div className="stars-container compact">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -749,14 +748,14 @@ function CustomerExperienceApp() {
                     />
                   ))}
                 </div>
+                <span className="category-emoji">{ratingEmoji[hoverRatingService || ratingService]}</span>
               </div>
 
               {/* Ambiance / Vibe */}
               <div className="category-row">
                 <div className="category-label-row">
                   <span className="category-icon">✨</span>
-                  <span className="category-name">Vibe & Ambiance</span>
-                  <span className="category-emoji">{ratingEmoji[hoverRatingVibe || ratingVibe]}</span>
+                  <span className="category-name">Vibe</span>
                 </div>
                 <div className="stars-container compact">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -769,6 +768,7 @@ function CustomerExperienceApp() {
                     />
                   ))}
                 </div>
+                <span className="category-emoji">{ratingEmoji[hoverRatingVibe || ratingVibe]}</span>
               </div>
             </div>
 
@@ -832,7 +832,7 @@ function CustomerExperienceApp() {
           {/* Large pulsing golden gift box */}
           <div className="gift-visual-container">
             <img
-              src="/assets/gift_box.png"
+              src="/assets/gift_box.png?v=2"
               alt="Pulsing Surprise Gift Box"
               className="gift-image"
             />
