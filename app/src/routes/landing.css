@@ -519,17 +519,19 @@ textarea.form-control {
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 0.5rem 0;
+  max-width: 350px;
+  margin: 0 auto;
+  padding: 0.5rem;
 }
 
 .retro-scratch-card {
   background-color: #121212; /* Textured charcoal black card background */
-  border: 1px solid rgba(229, 66, 43, 0.4);
-  border-radius: 18px;
+  border: 1px solid rgba(229, 66, 43, 0.45);
+  border-radius: 20px;
   position: relative;
   width: 100%;
-  padding: 1.6rem 1.2rem 1rem 1.2rem;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  padding: 1.75rem 1.35rem 1.15rem 1.35rem;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
 
@@ -542,73 +544,74 @@ textarea.form-control {
   right: 8px;
   bottom: 8px;
   border: 1px dashed #E5422B;
-  border-radius: 12px;
+  border-radius: 14px;
   pointer-events: none;
-  opacity: 0.7;
+  opacity: 0.75;
 }
 
 .scratch-card-body {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 1.15rem;
   z-index: 5;
   position: relative;
 }
 
-/* Left Column: Logo */
+/* Centered Top Logo */
 .scratch-card-left {
-  flex: 0 0 100px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .scratch-card-logo {
-  width: 100px;
-  height: 100px;
+  width: 85px;
+  height: 85px;
   object-fit: contain;
 }
 
-/* Right Column: Title and Canvas wrapper */
+/* Main Content: Title and Canvas wrapper */
 .scratch-card-right {
-  flex: 1;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  align-items: center;
+  gap: 1.15rem;
 }
 
 .scratch-win-title {
   display: flex;
   flex-direction: column;
-  line-height: 0.95;
-  margin-left: 0.2rem;
+  align-items: center;
+  line-height: 0.9;
 }
 
 .text-scratch {
   font-family: var(--font-display);
-  font-size: 1.6rem;
+  font-size: 1.75rem;
   font-weight: 900;
   color: #FFF9F2;
   letter-spacing: 0.04em;
-  transform: rotate(-1.5deg);
+  transform: rotate(-1deg);
   text-transform: uppercase;
 }
 
 .text-win {
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: 1.9rem;
   font-weight: 900;
   color: #E5422B;
   font-style: italic;
-  margin-top: -1px;
-  transform: rotate(2deg);
+  margin-top: 2px;
+  transform: rotate(1deg);
 }
 
 .scratch-area-wrapper {
   width: 100%;
-  aspect-ratio: 1.8; /* Perfect horizontal rectangle proportion */
+  aspect-ratio: 1.5; /* Beautiful portrait-friendly rectangle proportion */
   position: relative;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   border: 2px solid #E5422B;
 }
