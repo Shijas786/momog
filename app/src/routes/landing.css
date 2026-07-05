@@ -816,3 +816,65 @@ textarea.form-control {
   100% { transform: translateX(24px) rotate(15deg); }
 }
 
+
+/* ==========================================================================
+   Mobile-Responsive Optimization (max-width: 480px)
+   ========================================================================== */
+@media (max-width: 480px) {
+  .screen-content {
+    padding: 0.85rem;
+  }
+  
+  .scratch-card-container {
+    padding: 0.25rem;
+    max-width: 100%;
+  }
+
+  .retro-scratch-card {
+    padding: 1.35rem 0.95rem 0.95rem 0.95rem;
+    border-radius: 16px;
+  }
+
+  .retro-scratch-card::after {
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+    border-radius: 11px;
+  }
+
+  .scratch-card-logo {
+    width: 75px;
+    height: 75px;
+  }
+
+  .scratch-card-body {
+    gap: 0.85rem;
+  }
+
+  .scratch-card-right {
+    gap: 0.95rem;
+  }
+
+  .text-scratch {
+    font-size: 1.45rem;
+  }
+
+  .text-win {
+    font-size: 1.65rem;
+  }
+
+  .scratch-title-group {
+    gap: 0.6rem;
+  }
+
+  .accent-lines {
+    width: 18px;
+    height: 18px;
+  }
+
+  .footer-text {
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+  }
+}
