@@ -617,24 +617,202 @@ textarea.form-control {
 }
 
 .scratch-card-footer {
-  margin-top: 1rem;
-  border-top: 1px solid rgba(229, 66, 43, 0.15);
-  padding-top: 0.55rem;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 1.25rem;
   gap: 0.5rem;
-  color: #FFF9F2;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  opacity: 0.75;
   position: relative;
   z-index: 5;
 }
 
+.footer-line {
+  flex: 1;
+  height: 1px;
+  background-color: rgba(229, 66, 43, 0.45);
+}
+
+.footer-text {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #FFF9F2;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
 .footer-diamond {
   color: #E5422B;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
+}
+
+/* ==========================================================================
+   Ticket Sunburst and Decor
+   ========================================================================== */
+.ticket-ray-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: 
+    radial-gradient(circle at 50% 70px, transparent 60px, #121212 180px),
+    repeating-conic-gradient(from 0deg at 50% 70px, rgba(255, 255, 255, 0.035) 0deg 8deg, transparent 8deg 20deg);
+  opacity: 0.9;
+}
+
+.dumpling-decor {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  color: rgba(255, 255, 255, 0.05); /* very faint dumpling outlines */
+  pointer-events: none;
+  z-index: 2;
+}
+.dumpling-decor.top-left { top: 22px; left: 22px; transform: rotate(-15deg); }
+.dumpling-decor.top-right { top: 22px; right: 22px; transform: rotate(15deg); }
+.dumpling-decor.mid-left { top: 110px; left: 16px; transform: rotate(-35deg); width: 38px; height: 38px; }
+.dumpling-decor.mid-right { top: 110px; right: 16px; transform: rotate(35deg); width: 38px; height: 38px; }
+
+.ticket-sparkle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+  z-index: 2;
+  animation: ticketSparkleAnim 3s ease-in-out infinite alternate;
+}
+.ticket-sparkle.s1 { top: 32px; right: 80px; animation-delay: 0s; }
+.ticket-sparkle.s2 { top: 90px; left: 75px; animation-delay: 1.5s; }
+
+@keyframes ticketSparkleAnim {
+  0% { transform: scale(0.6) rotate(0deg); opacity: 0.4; }
+  100% { transform: scale(1.1) rotate(45deg); opacity: 1; }
+}
+
+/* Distressed Spark Lines beside title */
+.scratch-title-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.95rem;
+  width: 100%;
+}
+
+.accent-lines {
+  width: 22px;
+  height: 22px;
+  color: #FFF9F2;
+  opacity: 0.75;
+}
+.accent-lines.left {
+  transform: rotate(-10deg);
+}
+.accent-lines.right {
+  transform: scaleX(-1) rotate(-10deg);
+}
+
+/* ==========================================================================
+   Premium Animated SVG Background
+   ========================================================================== */
+.premium-animated-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0b0b0c;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Ambient glow nodes */
+.bg-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(130px);
+  opacity: 0.15;
+  pointer-events: none;
+}
+.bg-glow.glow-1 {
+  top: -15%;
+  left: 15%;
+  width: 450px;
+  height: 450px;
+  background-color: #E5422B;
+  animation: glowPulse 10s ease-in-out infinite alternate;
+}
+.bg-glow.glow-2 {
+  bottom: -10%;
+  right: 10%;
+  width: 500px;
+  height: 500px;
+  background-color: #E5422B;
+  animation: glowPulse 14s ease-in-out infinite alternate-reverse;
+}
+
+/* Steam waves container */
+.steam-waves-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 55%;
+  opacity: 0.85;
+}
+.steam-wave-svg {
+  width: 200%;
+  height: 100%;
+}
+.steam-wave {
+  animation: steamShift 28s linear infinite;
+}
+.steam-wave.wave-a {
+  animation-duration: 22s;
+}
+.steam-wave.wave-b {
+  animation-duration: 30s;
+  animation-delay: -6s;
+}
+
+@keyframes steamShift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Particles Container */
+.bg-particles-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.bg-floating-dumpling-wrapper {
+  position: absolute;
+  bottom: -60px;
+  animation: bgFloatUp linear infinite;
+  pointer-events: none;
+}
+
+.bg-floating-dumpling-child {
+  color: #FFF9F2;
+  animation: bgSway ease-in-out infinite alternate;
+}
+
+@keyframes bgFloatUp {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-118vh); }
+}
+
+@keyframes bgSway {
+  0% { transform: translateX(-24px) rotate(0deg); }
+  100% { transform: translateX(24px) rotate(15deg); }
 }
 

@@ -203,6 +203,104 @@ function SparkleLayer() {
   );
 }
 
+// Stylized dumpling outline vector decoration matching the logo
+const DumplingOutline = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path 
+      d="M20,60 C20,78 35,83 50,83 C65,83 80,78 80,60 C80,45 70,35 50,35 C30,35 20,45 20,60 Z" 
+      stroke="currentColor" 
+      strokeWidth="3.5" 
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path d="M50,35 C50,22 45,15 48,15" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"/>
+    <path d="M40,38 C35,27 30,22 35,22" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"/>
+    <path d="M60,38 C65,27 70,22 65,22" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"/>
+    <path d="M28,48 C25,42 22,40 25,38" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"/>
+    <path d="M72,48 C75,42 78,40 75,38" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"/>
+  </svg>
+);
+
+// High-fidelity four-pointed sparkle star vector
+const TicketSparkle = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12,2 C12,2 13,8 15,10 C17,12 22,12 22,12 C22,12 17,12 15,14 C13,16 12,22 12,22 C12,22 11,16 9,14 C7,12 2,12 2,12 C2,12 7,12 9,10 C11,8 12,2 12,2 Z" />
+  </svg>
+);
+
+// Premium SVG background with moving ambient glow lights and floating vector dumplings
+function PremiumAnimatedBackground() {
+  const [bgParticles] = useState(() => 
+    Array.from({ length: 9 }).map((_, i) => ({
+      id: i,
+      left: 3 + Math.random() * 94,
+      size: 24 + Math.random() * 26,
+      delay: Math.random() * -35,
+      duration: 22 + Math.random() * 18,
+      rotation: Math.random() * 360,
+      swayDuration: 6 + Math.random() * 6,
+      opacity: 0.025 + Math.random() * 0.035
+    }))
+  );
+
+  return (
+    <div className="premium-animated-bg">
+      {/* Dynamic ambient color gradients */}
+      <div className="bg-glow glow-1" />
+      <div className="bg-glow glow-2" />
+      
+      {/* Morphing rising steam paths */}
+      <div className="steam-waves-container">
+        <svg viewBox="0 0 1440 800" fill="none" preserveAspectRatio="none" className="steam-wave-svg">
+          <path className="steam-wave wave-a" d="M0,350 C360,300 720,400 1080,350 C1260,325 1380,340 1440,350 L1440,800 L0,800 Z" fill="url(#steam-grad-a)" />
+          <path className="steam-wave wave-b" d="M0,420 C360,460 720,380 1080,420 C1260,440 1380,410 1440,420 L1440,800 L0,800 Z" fill="url(#steam-grad-b)" />
+          <defs>
+            <linearGradient id="steam-grad-a" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="rgba(229, 66, 43, 0.04)" />
+              <stop offset="60%" stopColor="rgba(229, 66, 43, 0.01)" />
+              <stop offset="100%" stopColor="transparent" />
+            </linearGradient>
+            <linearGradient id="steam-grad-b" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="rgba(255, 249, 242, 0.03)" />
+              <stop offset="60%" stopColor="rgba(255, 249, 242, 0.005)" />
+              <stop offset="100%" stopColor="transparent" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      {/* Floating vector dumpling outlines */}
+      <div className="bg-particles-container">
+        {bgParticles.map((p) => (
+          <div
+            key={p.id}
+            className="bg-floating-dumpling-wrapper"
+            style={{
+              left: `${p.left}%`,
+              animationDelay: `${p.delay}s`,
+              animationDuration: `${p.duration}s`
+            }}
+          >
+            <div
+              className="bg-floating-dumpling-child"
+              style={{
+                width: `${p.size}px`,
+                height: `${p.size}px`,
+                opacity: p.opacity,
+                transform: `rotate(${p.rotation}deg)`,
+                animationDuration: `${p.swayDuration}s`,
+                animationDelay: `${p.delay * 0.4}s`
+              } as any}
+            >
+              <DumplingOutline />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // Interactive ScratchCard using custom audio synthesis intensity trigger
 interface ScratchCardProps {
   rewardText: string;
@@ -533,19 +631,8 @@ function CustomerExperienceApp() {
 
   return (
     <div className="app-container">
-      {/* Background steam gradient shift */}
-      <div className="steam-overlay" />
-
-      {/* Cinematic retro video background */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="video-background"
-      >
-        <source src="/assets/background_video.mp4" type="video/mp4" />
-      </video>
+      {/* Premium animated SVG background */}
+      <PremiumAnimatedBackground />
 
       {/* Floating Retro Japanese food spot illustrations */}
       <img src="/assets/noodle_spot.png" className="floating-spot spot-noodle" alt="Noodle bowl deco" />
@@ -719,17 +806,40 @@ function CustomerExperienceApp() {
         <div className="screen-content" style={{ justifyContent: "center" }}>
           <div className="scratch-card-container">
             <div className="retro-scratch-card">
+              {/* Sunburst radial rays pattern and floating dumpling graphics */}
+              <div className="ticket-ray-pattern" />
+              <DumplingOutline className="dumpling-decor top-left" />
+              <DumplingOutline className="dumpling-decor top-right" />
+              <DumplingOutline className="dumpling-decor mid-left" />
+              <DumplingOutline className="dumpling-decor mid-right" />
+              <TicketSparkle className="ticket-sparkle s1" />
+              <TicketSparkle className="ticket-sparkle s2" />
+
               <div className="scratch-card-body">
-                {/* Left Column: Logo */}
+                {/* Centered Top Logo */}
                 <div className="scratch-card-left">
                   <img src="/assets/front_logo.png" className="scratch-card-logo" alt="MOMOJI Logo" />
                 </div>
 
-                {/* Right Column: Title and Canvas Scratch Box */}
+                {/* Title and Canvas Scratch Box */}
                 <div className="scratch-card-right">
-                  <div className="scratch-win-title">
-                    <span className="text-scratch">SCRATCH</span>
-                    <span className="text-win">& WIN!</span>
+                  <div className="scratch-title-group">
+                    {/* Distressed spark lines on left */}
+                    <svg className="accent-lines left" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+                      <line x1="4" y1="18" x2="16" y2="8" />
+                      <line x1="8" y1="20" x2="20" y2="12" />
+                    </svg>
+
+                    <div className="scratch-win-title">
+                      <span className="text-scratch">SCRATCH</span>
+                      <span className="text-win">& WIN!</span>
+                    </div>
+
+                    {/* Distressed spark lines on right */}
+                    <svg className="accent-lines right" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+                      <line x1="8" y1="8" x2="20" y2="18" />
+                      <line x1="4" y1="12" x2="16" y2="22" />
+                    </svg>
                   </div>
 
                   {/* Silver scratch box */}
@@ -749,9 +859,11 @@ function CustomerExperienceApp() {
 
               {/* Bottom Tagline Footer */}
               <div className="scratch-card-footer">
+                <div className="footer-line"></div>
                 <span className="footer-diamond">✦</span>
-                <span>STEAMING GOOD VIBES</span>
+                <span className="footer-text">STEAMING GOOD VIBES</span>
                 <span className="footer-diamond">✦</span>
+                <div className="footer-line"></div>
               </div>
             </div>
           </div>
