@@ -31,18 +31,17 @@ export default defineConfig(({ mode }) => {
     // imports (h3, react, @tanstack/*, seroval, …), which resolve on a Node
     // server but throw "No such module" in a Worker. Bundle them all in.
     // (node: builtins stay external — nodejs_compat provides them.)
-    ssr: {
-      noExternal: true,
-      // `cloudflare:workers` is a workerd runtime built-in that exposes the Worker
-      // env / bindings (D1 `DB`, R2 `STORAGE`). Like node: builtins it must NOT be
-      // bundled; the runtime provides it. (`ssr.external` is typed string[].)
-      external: ["cloudflare:workers"],
-    },
-    build: {
-      // Keep `cloudflare:*` external in the SSR rollup pass too — `noExternal`
-      // above would otherwise try to resolve+bundle it and fail.
-      rollupOptions: { external: [/^cloudflare:/] },
-    },
+    ssr: process.env.VERCEL
+      ? undefined
+      : {
+          noExternal: true,
+          external: ["cloudflare:workers"],
+        },
+    build: process.env.VERCEL
+      ? undefined
+      : {
+          rollupOptions: { external: [/^cloudflare:/] },
+        },
     plugins: [
       // Material Symbols SVGs (the app icon set) import as React components via
       // `?react`. `icon: true` sizes them 1em; fill is forced to currentColor so
