@@ -121,14 +121,31 @@ function StarIcon({ filled, onClick, index, onMouseEnter }: { filled: boolean; o
       className="star-btn" 
       onClick={onClick}
       onMouseEnter={onMouseEnter}
-      style={{ animationDelay: `${index * 0.08}s` }}
+      style={{ animationDelay: `${index * 0.09}s` }}
     >
       <svg
         className={`star-icon ${filled ? "filled" : ""}`}
-        viewBox="0 0 24 24"
+        viewBox="-4 -4 32 32"
         xmlns="http://www.w3.org/2000/svg"
       >
+        {/* Main star shape */}
         <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+
+        {/* Animated twinkle rays — visible only when filled */}
+        <g className="star-rays" strokeLinecap="round">
+          {/* Top */}
+          <line x1="12" y1="-1" x2="12" y2="1.5" stroke="currentColor" strokeWidth="1.6" />
+          {/* Top-right */}
+          <line x1="20" y1="2" x2="18.3" y2="3.8" stroke="currentColor" strokeWidth="1.6" />
+          {/* Right */}
+          <line x1="25" y1="11" x2="22.5" y2="11" stroke="currentColor" strokeWidth="1.6" />
+          {/* Bottom-right */}
+          <line x1="20" y1="21" x2="18.3" y2="19.3" stroke="currentColor" strokeWidth="1.6" />
+          {/* Top-left */}
+          <line x1="4" y1="2" x2="5.7" y2="3.8" stroke="currentColor" strokeWidth="1.6" />
+          {/* Left */}
+          <line x1="-1" y1="11" x2="1.5" y2="11" stroke="currentColor" strokeWidth="1.6" />
+        </g>
       </svg>
     </button>
   );
