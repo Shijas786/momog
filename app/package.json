@@ -12,9 +12,9 @@
   "scripts": {
     "dev": "vite dev",
     "dev:design": "HF_DESIGN_INSPECTOR=1 vite dev --mode design",
-    "build": "vite build",
+    "build": "NITRO_PRESET=vercel vite build",
     "build:design": "HF_DESIGN_INSPECTOR=1 vite build --mode design",
-    "build:prod": "vite build",
+    "build:prod": "NITRO_PRESET=vercel vite build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
