@@ -253,73 +253,99 @@ const TicketSparkle = ({ className }: { className?: string }) => (
 
 // Premium SVG background with moving ambient glow lights and floating vector dumplings
 function PremiumAnimatedBackground() {
-  const [bgParticles] = useState(() => 
-    Array.from({ length: 9 }).map((_, i) => ({
+  // Sakura petals — random but stable (no re-render jitter)
+  const [petals] = useState(() =>
+    Array.from({ length: 18 }).map((_, i) => ({
       id: i,
-      left: 3 + Math.random() * 94,
-      size: 24 + Math.random() * 26,
-      delay: Math.random() * -35,
-      duration: 22 + Math.random() * 18,
-      rotation: Math.random() * 360,
-      swayDuration: 6 + Math.random() * 6,
-      opacity: 0.025 + Math.random() * 0.035
+      left: 2 + (i * 5.4) % 96,
+      delay: -(i * 2.1) % 18,
+      duration: 12 + (i * 1.3) % 10,
+      size: 7 + (i * 1.7) % 9,
+      sway: 20 + (i * 4.3) % 40,
+      rotate: (i * 47) % 360,
     }))
   );
 
   return (
-    <div className="premium-animated-bg">
-      {/* Dynamic ambient color gradients */}
-      <div className="bg-glow glow-1" />
-      <div className="bg-glow glow-2" />
-      
-      {/* Morphing rising steam paths */}
-      <div className="steam-waves-container">
-        <svg viewBox="0 0 1440 800" fill="none" preserveAspectRatio="none" className="steam-wave-svg">
-          <path className="steam-wave wave-a" d="M0,350 C360,300 720,400 1080,350 C1260,325 1380,340 1440,350 L1440,800 L0,800 Z" fill="url(#steam-grad-a)" />
-          <path className="steam-wave wave-b" d="M0,420 C360,460 720,380 1080,420 C1260,440 1380,410 1440,420 L1440,800 L0,800 Z" fill="url(#steam-grad-b)" />
-          <defs>
-            <linearGradient id="steam-grad-a" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="rgba(229, 66, 43, 0.04)" />
-              <stop offset="60%" stopColor="rgba(229, 66, 43, 0.01)" />
-              <stop offset="100%" stopColor="transparent" />
-            </linearGradient>
-            <linearGradient id="steam-grad-b" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="rgba(255, 249, 242, 0.03)" />
-              <stop offset="60%" stopColor="rgba(255, 249, 242, 0.005)" />
-              <stop offset="100%" stopColor="transparent" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
+    <div className="jp-bg">
+      {/* ── Base gradient: indigo → deep burgundy → warm black ── */}
+      <div className="jp-base-grad" />
 
-      {/* Floating vector dumpling outlines */}
-      <div className="bg-particles-container">
-        {bgParticles.map((p) => (
+      {/* ── Seigaiha (overlapping arc scales) pattern ── */}
+      <svg className="jp-seigaiha" viewBox="0 0 120 120" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <pattern id="seigaiha" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+            {/* Row 1 */}
+            <path d="M20 20 A20 20 0 0 1 0 20 A20 20 0 0 1 20 20 Z" fill="none" stroke="rgba(180,100,60,0.13)" strokeWidth="0.8"/>
+            <path d="M40 20 A20 20 0 0 1 20 20 A20 20 0 0 1 40 20 Z" fill="none" stroke="rgba(180,100,60,0.13)" strokeWidth="0.8"/>
+            {/* Row 2 offset */}
+            <path d="M10 40 A20 20 0 0 1 -10 40 A20 20 0 0 1 10 40 Z" fill="none" stroke="rgba(180,100,60,0.1)" strokeWidth="0.8"/>
+            <path d="M30 40 A20 20 0 0 1 10 40 A20 20 0 0 1 30 40 Z" fill="none" stroke="rgba(180,100,60,0.1)" strokeWidth="0.8"/>
+            <path d="M50 40 A20 20 0 0 1 30 40 A20 20 0 0 1 50 40 Z" fill="none" stroke="rgba(180,100,60,0.1)" strokeWidth="0.8"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#seigaiha)" />
+      </svg>
+
+      {/* ── Hokusai-style horizontal wave bands ── */}
+      <svg className="jp-waves" viewBox="0 0 480 900" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="wave-grad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(100,40,20,0)"/>
+            <stop offset="50%" stopColor="rgba(180,60,30,0.06)"/>
+            <stop offset="100%" stopColor="rgba(100,40,20,0)"/>
+          </linearGradient>
+        </defs>
+        {[0.22, 0.38, 0.54, 0.68, 0.80].map((y, i) => (
+          <path
+            key={i}
+            d={`M0,${y * 900} C80,${y * 900 - 18} 160,${y * 900 + 18} 240,${y * 900} C320,${y * 900 - 18} 400,${y * 900 + 18} 480,${y * 900}`}
+            fill="none"
+            stroke="url(#wave-grad)"
+            strokeWidth={i % 2 === 0 ? "1.2" : "0.7"}
+            opacity={0.55 - i * 0.05}
+          />
+        ))}
+      </svg>
+
+      {/* ── Ambient lantern glows ── */}
+      <div className="jp-glow jp-glow-1" />
+      <div className="jp-glow jp-glow-2" />
+      <div className="jp-glow jp-glow-3" />
+
+      {/* ── Falling sakura petals ── */}
+      <div className="jp-petals-layer">
+        {petals.map((p) => (
           <div
             key={p.id}
-            className="bg-floating-dumpling-wrapper"
+            className="jp-petal"
             style={{
               left: `${p.left}%`,
               animationDelay: `${p.delay}s`,
-              animationDuration: `${p.duration}s`
-            }}
+              animationDuration: `${p.duration}s`,
+              '--sway': `${p.sway}px`,
+              '--rot': `${p.rotate}deg`,
+            } as any}
           >
-            <div
-              className="bg-floating-dumpling-child"
-              style={{
-                width: `${p.size}px`,
-                height: `${p.size}px`,
-                opacity: p.opacity,
-                transform: `rotate(${p.rotation}deg)`,
-                animationDuration: `${p.swayDuration}s`,
-                animationDelay: `${p.delay * 0.4}s`
-              } as any}
-            >
-              <DumplingOutline />
-            </div>
+            {/* SVG sakura petal */}
+            <svg width={p.size} height={p.size} viewBox="0 0 20 20" fill="none">
+              <ellipse cx="10" cy="10" rx="5" ry="9" fill="rgba(230,150,160,0.75)" transform={`rotate(${p.rotate},10,10)`}/>
+              <ellipse cx="10" cy="10" rx="5" ry="9" fill="rgba(230,150,160,0.5)" transform={`rotate(${p.rotate + 72},10,10)`}/>
+              <ellipse cx="10" cy="10" rx="5" ry="9" fill="rgba(230,150,160,0.55)" transform={`rotate(${p.rotate + 144},10,10)`}/>
+              <ellipse cx="10" cy="10" rx="5" ry="9" fill="rgba(230,150,160,0.5)" transform={`rotate(${p.rotate + 216},10,10)`}/>
+              <ellipse cx="10" cy="10" rx="5" ry="9" fill="rgba(230,150,160,0.6)" transform={`rotate(${p.rotate + 288},10,10)`}/>
+              <circle cx="10" cy="10" r="2.2" fill="rgba(255,200,180,0.8)"/>
+            </svg>
           </div>
         ))}
       </div>
+
+      {/* ── Ink-wash drifting clouds ── */}
+      <svg className="jp-ink-clouds" viewBox="0 0 480 900" preserveAspectRatio="xMidYMid slice">
+        <ellipse className="jp-cloud jp-cloud-a" cx="80" cy="720" rx="140" ry="38" fill="rgba(60,25,15,0.18)"/>
+        <ellipse className="jp-cloud jp-cloud-b" cx="380" cy="580" rx="110" ry="28" fill="rgba(60,25,15,0.12)"/>
+        <ellipse className="jp-cloud jp-cloud-c" cx="200" cy="820" rx="180" ry="45" fill="rgba(60,25,15,0.14)"/>
+      </svg>
     </div>
   );
 }

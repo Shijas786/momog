@@ -851,104 +851,127 @@ textarea.form-control {
 }
 
 /* ==========================================================================
-   Premium Animated SVG Background
+   Japanese Retro Animated Background
    ========================================================================== */
-.premium-animated-bg {
+
+/* Root container */
+.jp-bg {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: #1a1410;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
   z-index: 1;
   overflow: hidden;
   pointer-events: none;
 }
 
-/* Ambient glow nodes */
-.bg-glow {
+/* ── Base gradient: deep indigo-burgundy-black ── */
+.jp-base-grad {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(60,20,60,0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 80% 85%, rgba(100,18,18,0.45) 0%, transparent 60%),
+    linear-gradient(170deg, #0d0a14 0%, #150c10 40%, #1a0e08 75%, #120a06 100%);
+}
+
+/* ── Seigaiha SVG fills full screen ── */
+.jp-seigaiha {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  opacity: 0.55;
+}
+
+/* ── Horizontal Hokusai wave bands ── */
+.jp-waves {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  opacity: 0.7;
+}
+
+/* ── Ambient lantern glow spots ── */
+.jp-glow {
   position: absolute;
   border-radius: 50%;
-  filter: blur(130px);
-  opacity: 0.15;
+  filter: blur(90px);
   pointer-events: none;
 }
-.bg-glow.glow-1 {
-  top: -15%;
-  left: 15%;
-  width: 450px;
-  height: 450px;
-  background-color: #E5422B;
-  animation: glowPulse 10s ease-in-out infinite alternate;
+.jp-glow-1 {
+  top: -8%;
+  left: -10%;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(180,30,30,0.28), transparent 70%);
+  animation: jpGlowPulse 9s ease-in-out infinite alternate;
 }
-.bg-glow.glow-2 {
-  bottom: -10%;
-  right: 10%;
-  width: 500px;
-  height: 500px;
-  background-color: #E5422B;
-  animation: glowPulse 14s ease-in-out infinite alternate-reverse;
+.jp-glow-2 {
+  bottom: 5%;
+  right: -8%;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(100,20,80,0.3), transparent 70%);
+  animation: jpGlowPulse 12s ease-in-out infinite alternate-reverse;
+}
+.jp-glow-3 {
+  top: 42%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px; height: 200px;
+  background: radial-gradient(ellipse, rgba(200,80,20,0.09), transparent 70%);
+  animation: jpGlowPulse 16s ease-in-out infinite;
 }
 
-/* Steam waves container */
-.steam-waves-container {
+@keyframes jpGlowPulse {
+  0%   { opacity: 0.6; transform: scale(1); }
+  50%  { opacity: 1;   transform: scale(1.12); }
+  100% { opacity: 0.7; transform: scale(0.95); }
+}
+
+/* ── Sakura petals layer ── */
+.jp-petals-layer {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 55%;
-  opacity: 0.85;
-}
-.steam-wave-svg {
-  width: 200%;
-  height: 100%;
-}
-.steam-wave {
-  animation: steamShift 28s linear infinite;
-}
-.steam-wave.wave-a {
-  animation-duration: 22s;
-}
-.steam-wave.wave-b {
-  animation-duration: 30s;
-  animation-delay: -6s;
+  inset: 0;
+  width: 100%; height: 100%;
 }
 
-@keyframes steamShift {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* Particles Container */
-.bg-particles-container {
+.jp-petal {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -30px;
+  animation: petalFall linear infinite;
+  will-change: transform, opacity;
 }
 
-.bg-floating-dumpling-wrapper {
+@keyframes petalFall {
+  0% {
+    transform: translateY(-20px) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  8% { opacity: 0.85; }
+  85% { opacity: 0.7; }
+  100% {
+    transform: translateY(105vh) translateX(var(--sway, 30px)) rotate(calc(var(--rot, 0deg) + 540deg));
+    opacity: 0;
+  }
+}
+
+/* ── Ink wash drifting clouds SVG ── */
+.jp-ink-clouds {
   position: absolute;
-  bottom: -60px;
-  animation: bgFloatUp linear infinite;
-  pointer-events: none;
+  inset: 0;
+  width: 100%; height: 100%;
 }
 
-.bg-floating-dumpling-child {
-  color: #FFF9F2;
-  animation: bgSway ease-in-out infinite alternate;
+.jp-cloud {
+  animation: cloudDrift ease-in-out infinite alternate;
+}
+.jp-cloud-a { animation-duration: 18s; }
+.jp-cloud-b { animation-duration: 24s; animation-delay: -7s; }
+.jp-cloud-c { animation-duration: 20s; animation-delay: -12s; }
+
+@keyframes cloudDrift {
+  0%   { transform: translateX(-18px); opacity: 0.7; }
+  100% { transform: translateX(18px);  opacity: 1; }
 }
 
-@keyframes bgFloatUp {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-118vh); }
-}
-
-@keyframes bgSway {
-  0% { transform: translateX(-24px) rotate(0deg); }
-  100% { transform: translateX(24px) rotate(15deg); }
-}
 
 
 /* ==========================================================================
