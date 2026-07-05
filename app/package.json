@@ -12,9 +12,9 @@
   "scripts": {
     "dev": "vite dev",
     "dev:design": "HF_DESIGN_INSPECTOR=1 vite dev --mode design",
-    "build": "SERVER_PRESET=vercel-edge vinxi build",
-    "build:design": "HF_DESIGN_INSPECTOR=1 vinxi build --mode design",
-    "build:prod": "SERVER_PRESET=vercel-edge vinxi build",
+    "build": "SERVER_PRESET=vercel-edge npx vinxi build",
+    "build:design": "HF_DESIGN_INSPECTOR=1 npx vinxi build --mode design",
+    "build:prod": "SERVER_PRESET=vercel-edge npx vinxi build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
