@@ -114,9 +114,14 @@ class AudioSynthEngine {
 }
 
 // Custom star SVG icons
-function StarIcon({ filled, onClick }: { filled: boolean; onClick: () => void }) {
+function StarIcon({ filled, onClick, index }: { filled: boolean; onClick: () => void; index: number }) {
   return (
-    <button type="button" className="star-btn" onClick={onClick}>
+    <button 
+      type="button" 
+      className="star-btn" 
+      onClick={onClick}
+      style={{ animationDelay: `${index * 0.08}s` }}
+    >
       <svg
         className={`star-icon ${filled ? "filled" : ""}`}
         viewBox="0 0 24 24"
@@ -702,6 +707,7 @@ function CustomerExperienceApp() {
                 {[1, 2, 3, 4, 5].map((star) => (
                   <StarIcon
                     key={star}
+                    index={star - 1}
                     filled={hoverRating ? star <= hoverRating : star <= rating}
                     onClick={() => {
                       setRating(star);
