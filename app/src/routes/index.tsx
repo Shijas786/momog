@@ -554,7 +554,7 @@ function CustomerExperienceApp() {
           {/* Retro Ink & Watercolor Dumpling Basket illustration */}
           <div className="momo-visual-container">
             <img
-              src="/assets/steaming_momos.png"
+              src="/assets/front_logo.png"
               alt="Steaming Hot Dumpling Basket illustration"
               className="momo-image"
             />
